@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial Citas | RCMedica</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/doctor_profile.css' %}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="brand">rcmedica | Citas</div>
+        <a href="{% url 'doctor_profile' %}" style="color: white; text-decoration: none;">← Volver</a>
+    </nav>
+
+    <div class="main-container">
+        <div class="card">
+            <h2>Historial Completo de Citas</h2>
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Paciente</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in todas_las_citas %}
+                    <tr>
+                        <td>{{ cita.fecha|date:"d/m/Y H:i" }}</td>
+                        <td>{{ cita.paciente }}</td>
+                        <td>
+                            {% if cita.estado == 'pendiente' %}<span class="badge badge-pending">Pendiente</span>{% endif %}
+                            {% if cita.estado == 'aceptada' %}<span class="badge badge-confirmed">Aceptada</span>{% endif %}
+                            {% if cita.estado == 'rechazada' %}<span style="color:red; font-size:0.8rem;">Rechazada</span>{% endif %}
+                        </td>
+                        <td>
+                            <button class="btn-action btn-delete">👁️</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

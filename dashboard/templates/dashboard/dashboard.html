@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareConnect Dashboard</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="logo-icon">+</div>
+            <span class="brand-name">CareConnect</span>
+        </div>
+        <div class="nav-right">
+            <span class="icon-bell">🔔</span>
+            <span class="icon-menu">☰</span>
+            <div class="profile-pic">
+                {% if user.doctor.foto %}
+                    <img src="{{ user.doctor.foto.url }}" alt="Perfil">
+                {% else %}
+                    <img src="{% static 'dashboard/img/default-user.jpg' %}" alt="Perfil">
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <h1 class="page-title">Dashboard</h1>
+
+        <div class="top-cards">
+            <div class="card card-appointment">
+                <div class="card-header">
+                    <span class="icon-calendar">📅</span> Próxima cita
+                </div>
+                <div class="card-body">
+                    <h3>{{ proxima_cita.fecha|default:"12 Ene 2025" }} — {{ proxima_cita.hora|default:"10:30 AM" }}</h3>
+                    <p>{{ proxima_cita.doctor|default:"Dr. López" }} / {{ proxima_cita.especialidad|default:"Dermatología" }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon-doc">📄</span> Citas pendientes
+                </div>
+                <div class="card-body">
+                    <h2 class="big-number">{{ citas_pendientes|default:"2" }}</h2>
+                    <a href="#" class="link-blue">Ver todas</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="icon-clock">🕒</span> Historial
+                </div>
+                <div class="card-body">
+                    <h2 class="big-number">{{ historial_total|default:"16" }} <span class="small-text">citas</span></h2>
+                    <a href="#" class="link-blue">Ver historial completo</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+            
+            <div class="left-column">
+                <div class="card calendar-card">
+                    <div class="calendar-header">
+                        <button class="nav-arrow">&lt;</button>
+                        <h4>Enero 2025</h4>
+                        <button class="nav-arrow">&gt;</button>
+                    </div>
+                    
+                    <div class="calendar-days">
+                        <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
+                    </div>
+                    
+                    <div class="calendar-grid">
+                        <span class="text-muted">29</span><span class="text-muted">30</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+                        <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
+                        <span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span>
+                        <span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
+                    </div>
+
+                    <button class="btn-new-cita">+ Nueva Cita</button>
+                </div>
+                
+                <div class="card empty-history">
+                    <h4>Mensajito</h4>
+                    <div class="empty-lines">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="card doctor-card">
+                    <h4>Doctores disponibles</h4>
+                    
+                    {% for doctor in doctores_disponibles %}
+                    <div class="doctor-profile-card">
+                        {% if doctor.foto %}
+                            <img src="{{ doctor.foto.url }}" class="doc-img">
+                        {% else %}
+                            <div class="doc-img-placeholder">👨‍⚕️</div>
+                        {% endif %}
+                        <div class="doc-info">
+                            <h5>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h5>
+                            <p class="doc-spec">{{ doctor.especialidad }}</p>
+                            <p class="doc-time">{{ doctor.horario }}</p>
+                        </div>
+                    </div>
+                    <button class="btn-agendar">Agendar</button>
+                    {% empty %}
+                    <p style="color:#999; font-size:0.9rem;">No hay doctores disponibles hoy.</p>
+                    {% endfor %}
+                </div>
+
+                <div class="card history-table-card">
+                    <h4>Historial Rápido</h4>
+                    <table class="simple-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Medico</th>
+                                <th>Especialidad</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in historial_rapido %}
+                            <tr>
+                                <td>{{ cita.fecha|date:"d M y" }}</td>
+                                <td>{{ cita.doctor }}</td>
+                                <td>{{ cita.doctor.especialidad }}</td>
+                                <td>{{ cita.estado }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td>12 Ene 25</td><td>Dr. Pérez</td><td>Dermatología</td><td>Pendiente</td></tr>
+                            <tr><td>05 Ene 25</td><td>Dra. Moran</td><td>Pediatría</td><td>Asistida</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - RCMedicas</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="split-container">
+        <div class="left-pane">
+            <div class="illustration-wrapper">
+                <img src="{% static 'accounts/img/register_illustration.png' %}" alt="Medical Login">
+            </div>
+            </div>
+
+        <div class="right-pane">
+            <div class="form-container">
+                <h2 class="form-title">Acceso</h2>
+                
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    
+                    <div class="input-group">
+                        <label>Username</label>
+                        {{ form.username }} 
+                    </div>
+
+                    <div class="input-group">
+                        <label>Password</label>
+                        {{ form.password }}
+                    </div>
+
+                    {% if form.errors %}
+                        <p class="error-text">Usuario o contraseña incorrectos.</p>
+                    {% endif %}
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-login">Acceder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Certificados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dashboard/css/ver_certificados.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <a href="{% url 'doctor_profile' %}" class="back-link">&larr; Volver al Perfil</a>
+        <h1>Gestión de Certificados</h1>
+    </div>
+
+    <form method="POST" action="{% url 'acciones_certificados' %}">
+        {% csrf_token %}
+        
+        <div class="section-block">
+            <div class="section-header">
+                <h2>📂 Archivos Activos</h2>
+                <div class="controls">
+                    <button type="submit" name="accion" value="papelera" class="btn-danger">Mover a Papelera</button>
+                    </div>
+            </div>
+
+            <div class="grid-container">
+                {% for cert in activos %}
+                <label class="card-file">
+                    <input type="checkbox" name="certificados_ids" value="{{ cert.id }}" class="card-checkbox">
+                    <div class="card-content">
+                        <img src="{% static 'dashboard/img/image_260117.png' %}" alt="PDF">
+                        <span class="file-name" title="{{ cert.archivo.name }}">{{ cert.archivo.name|cut:"certificados/" }}</span>
+                        <a href="{{ cert.archivo.url }}" target="_blank" class="preview-link">Ver</a>
+                    </div>
+                </label>
+                {% empty %}
+                <p class="empty-msg">No tienes certificados activos.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section-block trash-section">
+            <div class="section-header">
+                <h2>🗑️ Papelera (30 días)</h2>
+                <div class="controls">
+                    <button type="submit" name="accion" value="restaurar" class="btn-restore">Restaurar Selección</button>
+                    <button type="submit" name="accion" value="vaciar_papelera" class="btn-empty" onclick="return confirm('¿Seguro que quieres borrar todo permanentemente?');">Vaciar Papelera</button>
+                </div>
+            </div>
+            
+            <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">
+                Los archivos aquí se eliminarán permanentemente después de 30 días.
+            </p>
+
+            <div class="grid-container">
+                {% for cert in papelera %}
+                <label class="card-file trash-card">
+                    <input type="checkbox" name="certificados_ids" value="{{ cert.id }}" class="card-checkbox">
+                    <div class="card-content">
+                        <div class="trash-overlay">Eliminado</div>
+                        <img src="{% static 'dashboard/img/image_260117.png' %}" alt="PDF" style="filter:grayscale(100%);">
+                        <span class="file-name">{{ cert.archivo.name|cut:"certificados/" }}</span>
+                        <small style="color:red; font-size:0.7rem;">Expira: {{ cert.fecha_eliminacion|add:"30 days"|timeuntil }}</small>
+                    </div>
+                </label>
+                {% empty %}
+                <p class="empty-msg">La papelera está vacía.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>

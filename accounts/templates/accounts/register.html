@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro {{ tipo }} - RCMedicas</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="split-container">
+        <div class="left-pane">
+            <div class="illustration-wrapper">
+                <img src="{% static 'accounts/img/register_illustration.png' %}" alt="Medical Illustration">
+            </div>
+            <h1 class="brand-title">Registro</h1>
+        </div>
+
+        <div class="right-pane">
+            <div class="form-container">
+                <h2 class="form-title">Soy {{ tipo }}</h2>
+                
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                    <div class="input-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        
+                        {% if field.errors %}
+                            <div class="error-text" style="color: red; font-size: 0.8rem; margin-top: 5px;">
+                                {{ field.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    
+                    {% if form.non_field_errors %}
+                        <div style="color: red; margin-bottom: 15px;">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-signup">Registrarme</button>
+                        <a href="{% url 'login' %}" class="btn btn-cancel">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
