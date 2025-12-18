@@ -1,5 +1,3 @@
-/* dashboard/static/dashboard/js/doctor_profile.js */
-
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('input-archivo');
     const lista = document.getElementById('lista-archivos');
@@ -9,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!config) return;
 
-    // --- VER TODOS ---
+
     if(btnVerTodos) {
         btnVerTodos.addEventListener('click', function(e) {
             e.preventDefault();
@@ -23,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- SUBIR ARCHIVO ---
+    
     if(input){
         input.addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -60,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- DIBUJAR FILA ---
+    
     function agregarFilaAlPrincipio(nombre, urlDescarga, certId) {
         const row = document.createElement('div');
         row.className = 'file-row';
@@ -83,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(total > 3) toggleContainer.style.display = 'block';
     }
 
-    // --- BORRAR ARCHIVO ---
+  
     async function borrarArchivo(id, elementoDOM) {
         if(!confirm('¿Eliminar certificado?')) return;
         
@@ -110,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error(error); }
     }
 
-    // Conectar botones existentes
+    
     document.querySelectorAll('.btn-delete-server').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = this.dataset.id;

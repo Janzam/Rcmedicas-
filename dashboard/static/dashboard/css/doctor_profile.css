@@ -30,8 +30,7 @@ body {
     margin: 30px auto;
     padding: 0 20px;
     display: grid;
-    /* CAMBIO IMPORTANTE: minmax(0, 1fr) evita el desbordamiento */
-    grid-template-columns: 350px minmax(0, 1fr);
+    grid-template-columns: 350px 1fr;
     gap: 30px;
     align-items: start;
 }
@@ -42,8 +41,6 @@ body {
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     border: 1px solid #e1e4e8;
-    /* Asegura que el contenido no expanda la tarjeta */
-    min-width: 0;
 }
 
 .profile-header {
@@ -137,14 +134,10 @@ body {
     font-family: 'Merriweather', serif;
     color: #4a5568;
     line-height: 1.6;
-    border-radius: 4px;
-    
-    /* REGLAS PARA ROMPER TEXTO LARGO */
     white-space: pre-wrap;
     overflow-wrap: break-word;
-    word-wrap: break-word;
-    word-break: break-all; /* Fuerza el corte incluso en palabras sin espacios */
-    max-width: 100%;
+    word-break: break-word;
+    border-radius: 4px;
 }
 
 .cert-header {
@@ -214,8 +207,6 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     margin-right: 15px;
-    /* Asegura que el nombre del archivo tampoco rompa el layout */
-    min-width: 0; 
 }
 
 .file-actions {

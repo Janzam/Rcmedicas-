@@ -1,6 +1,45 @@
-venv/
-__pycache__/
-*.pyc
-/staticfiles/
-db.sqlite3
+# --- Seguridad y Claves (ROOT/SENSITIVE) ---
+.env
+.env.*
+*.pem
+*.key
+*.pub
+*.crt
+secret_key.txt
+auth_token.txt
+credentials.json
+*.p12
 
+# --- Entornos Virtuales ---
+venv/
+env/
+ENV/
+lib/
+bin/
+include/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+
+# --- Bases de Datos ---
+*.sqlite3
+*.db
+*.dump
+*.sql
+
+# --- Sistema y Editores ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# --- Logs y Temporales ---
+*.log
+tmp/
+temp/
