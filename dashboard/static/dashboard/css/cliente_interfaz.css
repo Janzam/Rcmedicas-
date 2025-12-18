@@ -1,0 +1,424 @@
+:root {
+    --primary-blue: #2563EB;
+    --bg-color: #F9FAFB;
+    --white: #FFFFFF;
+    --text-dark: #111827;
+    --text-gray: #6B7280;
+    --green-btn: #10B981;
+    --radius: 12px;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 
+              0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+}
+
+a {
+    text-decoration: none;
+}
+
+/* --- NAVBAR --- */
+.navbar {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 1.1rem;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.8);
+    cursor: pointer;
+}
+
+/* --- LAYOUT GENERAL --- */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-title {
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1F2937;
+}
+
+/* Tarjetas Generales */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid #E5E7EB;
+    margin-bottom: 1.5rem;
+    /* Esto asegura que el botón flotante no se salga de la tarjeta */
+    overflow: hidden; 
+}
+
+/* Fix para floats dentro de card */
+.card::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+/* --- ESTADÍSTICAS SUPERIORES --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.icon-blue {
+    color: var(--primary-blue);
+    font-size: 1.2rem;
+    background: #EFF6FF;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.stat-body h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.stat-body h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+}
+
+.subtext,
+.time {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+.link-blue {
+    color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.link-blue:hover {
+    text-decoration: underline;
+}
+
+/* --- SECCIÓN DIVIDIDA (CALENDARIO / PANELES) --- */
+.main-split {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1.5rem;
+}
+
+/* ======================================================= */
+/* --- CALENDARIO (Números grandes, Compacto, Botón pequeño) --- */
+/* ======================================================= */
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 5px;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1F2937;
+}
+
+.arrow-icon {
+    color: #9CA3AF;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+}
+
+.arrow-icon:hover {
+    background-color: #F3F4F6;
+    color: var(--primary-blue);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    /* Espacio muy pequeño entre círculos para compactar */
+    gap: 4px; 
+    justify-items: center; 
+    margin-bottom: 1rem; /* Margen inferior reducido */
+}
+
+.day-name {
+    font-weight: 700;
+    color: #9CA3AF;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.day {
+    /* TAMAÑO DE CÍRCULOS (Grandes) */
+    width: 44px;
+    height: 44px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* TAMAÑO DE NÚMEROS (Grandes) */
+    font-size: 1.15rem; 
+    font-weight: 500;
+    
+    color: var(--text-dark);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.day:hover:not(.empty):not(.active-day) {
+    background-color: #EFF6FF;
+    color: var(--primary-blue);
+    font-weight: 700;
+    transform: scale(1.1);
+}
+
+.active-day {
+    background-color: var(--primary-blue);
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+}
+
+.day.empty {
+    cursor: default;
+}
+
+/* Botón "Nueva Cita" pequeño y a la derecha */
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    
+    /* Flotar a la derecha y tamaño auto */
+    float: right;
+    width: auto;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.btn-primary:hover {
+    background: #1D4ED8;
+    transform: translateY(-1px);
+}
+/* ======================================================= */
+
+
+/* --- COLUMNA DERECHA --- */
+.right-column-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* --- TARJETAS DE DOCTORES --- */
+.doctor-card-inner {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #F3F4F6;
+}
+
+.doctor-card-inner:last-child {
+    border-bottom: none;
+}
+
+.doc-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.doc-info h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.specialty {
+    color: var(--primary-blue);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.availability {
+    font-size: 0.8rem;
+    color: #6B7280;
+    margin-top: 2px;
+}
+
+/* --- TABLA DE ASISTENCIA / HISTORIAL --- */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    text-align: left;
+    color: #9CA3AF;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-bottom: 12px;
+}
+
+.history-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #F3F4F6;
+    font-size: 0.9rem;
+    color: #4B5563;
+}
+
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* --- BADGES (Etiquetas de estado) --- */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-pending {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+.badge-done {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+.badge-cancelled {
+    background: #FEE2E2; 
+    color: #EF4444;       
+}
+
+/* --- MENSAJES DE ESTADO VACÍO (NO HAY CITAS) --- */
+.empty-msg {
+    color: #9CA3AF;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 20px 0;
+    font-style: italic;
+}
+
+.text-center-muted {
+    text-align: center;
+    color: #9CA3AF;
+    padding: 20px 0;
+    font-size: 0.9rem;
+}
+
+/* --- BOTONES SECUNDARIOS --- */
+.btn-outline-full {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.2s;
+}
+
+.btn-outline-full:hover {
+    background: #EFF6FF;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .main-split {
+        grid-template-columns: 1fr;
+    }
+    
+    .calendar-grid {
+        gap: 2px;
+    }
+    
+    /* En móviles reducimos un poco el tamaño para que quepan */
+    .day {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+}

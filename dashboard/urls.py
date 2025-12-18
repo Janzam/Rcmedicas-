@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/subir-certificado/', views.subir_certificado_ajax, name='subir_certificado_ajax'),
     path('api/borrar-certificado/', views.borrar_certificado_ajax, name='borrar_certificado_ajax'),
     
+     path('agenda-dia/', views.agenda_dia_view, name='agenda_dia'),
 ]

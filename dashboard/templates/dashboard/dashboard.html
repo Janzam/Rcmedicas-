@@ -5,148 +5,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareConnect Dashboard</title>
-    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'dashboard/css/cliente_interfaz.css' %}">
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-left">
-            <div class="logo-icon">+</div>
-            <span class="brand-name">CareConnect</span>
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-plus-circle"></i> CareConnect
         </div>
-        <div class="nav-right">
-            <span class="icon-bell">🔔</span>
-            <span class="icon-menu">☰</span>
-            <div class="profile-pic">
-                {% if user.doctor.foto %}
-                    <img src="{{ user.doctor.foto.url }}" alt="Perfil">
-                {% else %}
-                    <img src="{% static 'dashboard/img/default-user.jpg' %}" alt="Perfil">
-                {% endif %}
+        <div class="user-menu">
+            <i class="far fa-bell"></i>
+            <div class="avatar-container">
+                <img src="https://ui-avatars.com/api/?name={{ user.username|default:'Usuario' }}&background=E91E63&color=fff" alt="Perfil" class="avatar">
             </div>
         </div>
-    </nav>
+    </header>
 
-    <div class="main-content">
+    <main class="dashboard-container">
+        
         <h1 class="page-title">Dashboard</h1>
 
-        <div class="top-cards">
-            <div class="card card-appointment">
-                <div class="card-header">
-                    <span class="icon-calendar">📅</span> Próxima cita
+        <section class="stats-grid">
+            
+            <div class="card stat-card">
+                <div class="stat-header">
+                    <i class="far fa-calendar-alt icon-blue"></i> <span>Próxima cita</span>
                 </div>
-                <div class="card-body">
-                    <h3>{{ proxima_cita.fecha|default:"12 Ene 2025" }} — {{ proxima_cita.hora|default:"10:30 AM" }}</h3>
-                    <p>{{ proxima_cita.doctor|default:"Dr. López" }} / {{ proxima_cita.especialidad|default:"Dermatología" }}</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <span class="icon-doc">📄</span> Citas pendientes
-                </div>
-                <div class="card-body">
-                    <h2 class="big-number">{{ citas_pendientes|default:"2" }}</h2>
-                    <a href="#" class="link-blue">Ver todas</a>
+                <div class="stat-body">
+                    {% if proxima_cita %}
+                        <h3>{{ proxima_cita.fecha }} <span class="time">— {{ proxima_cita.hora }}</span></h3>
+                        <p class="subtext">{{ proxima_cita.doctor }} / {{ proxima_cita.especialidad }}</p>
+                    {% else %}
+                        <h3 style="color: #9CA3AF; font-size: 1.1rem; font-weight: 500;">No tienes citas próximas</h3>
+                        <p class="subtext">Agenda tu visita en el calendario</p>
+                    {% endif %}
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <span class="icon-clock">🕒</span> Historial
+
+            <div class="card stat-card">
+                <div class="stat-header">
+                    <i class="far fa-file-alt icon-blue"></i> <span>Citas pendientes</span>
                 </div>
-                <div class="card-body">
-                    <h2 class="big-number">{{ historial_total|default:"16" }} <span class="small-text">citas</span></h2>
+                <div class="stat-body">
+                    <h2>{{ citas_pendientes|default:"0" }}</h2>
+                    {% if citas_pendientes and citas_pendientes > 0 %}
+                        <a href="#" class="link-blue">Ver todas</a>
+                    {% else %}
+                        <span class="subtext">Todo al día</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <div class="stat-header">
+                    <i class="fas fa-history icon-blue"></i> <span>Historial</span>
+                </div>
+                <div class="stat-body">
+                    <h2>{{ historial_total|default:"0" }} <span class="time">citas</span></h2>
                     <a href="#" class="link-blue">Ver historial completo</a>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="bottom-grid">
+        <section class="main-split">
             
-            <div class="left-column">
-                <div class="card calendar-card">
-                    <div class="calendar-header">
-                        <button class="nav-arrow">&lt;</button>
-                        <h4>Enero 2025</h4>
-                        <button class="nav-arrow">&gt;</button>
-                    </div>
-                    
-                    <div class="calendar-days">
-                        <span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span><span>Do</span>
-                    </div>
-                    
-                    <div class="calendar-grid">
-                        <span class="text-muted">29</span><span class="text-muted">30</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-                        <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
-                        <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
-                        <span>20</span><span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span>
-                        <span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
-                    </div>
-
-                    <button class="btn-new-cita">+ Nueva Cita</button>
+            <div class="card">
+                <div class="calendar-header">
+                    <i class="fas fa-chevron-left arrow-icon"></i>
+                    <h3>Enero 2025</h3>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
                 </div>
-                
-                <div class="card empty-history">
-                    <h4>Mensajito</h4>
-                    <div class="empty-lines">
-                        <div class="line"></div>
-                        <div class="line"></div>
-                    </div>
+                <div class="calendar-grid">
+                    <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div><div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sa</div><div class="day-name">Do</div>
+                    <div class="day empty"></div><div class="day empty"></div>
+                    <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div>
+                    <div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div>
+                    <div class="day active-day">13</div><div class="day">14</div><div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div>
+                    <div class="day">20</div><div class="day">21</div><div class="day">22</div><div class="day">23</div><div class="day">24</div><div class="day">25</div><div class="day">26</div>
+                    <div class="day">27</div><div class="day">28</div><div class="day">29</div><div class="day">30</div><div class="day">31</div>
                 </div>
+                <button class="btn-primary">+ Nueva Cita</button>
             </div>
 
-            <div class="right-column">
-                <div class="card doctor-card">
-                    <h4>Doctores disponibles</h4>
+            <div class="right-column-wrapper">
+                
+                <div class="card">
+                    <h3 class="card-title">Doctores disponibles</h3>
                     
-                    {% for doctor in doctores_disponibles %}
-                    <div class="doctor-profile-card">
+                    {% for doctor in doctores_disponibles|slice:":3" %}
+                    <div class="doctor-card-inner">
                         {% if doctor.foto %}
                             <img src="{{ doctor.foto.url }}" class="doc-img">
                         {% else %}
-                            <div class="doc-img-placeholder">👨‍⚕️</div>
+                            <img src="https://ui-avatars.com/api/?name={{ doctor.usuario.first_name }}+{{ doctor.usuario.last_name }}&background=EBF4FF&color=2563EB" class="doc-img">
                         {% endif %}
                         <div class="doc-info">
-                            <h5>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h5>
-                            <p class="doc-spec">{{ doctor.especialidad }}</p>
-                            <p class="doc-time">{{ doctor.horario }}</p>
+                            <h4>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h4>
+                            <p class="specialty">{{ doctor.especialidad }}</p>
+                            <p class="availability">Lun, Mie, Vie</p>
                         </div>
                     </div>
-                    <button class="btn-agendar">Agendar</button>
                     {% empty %}
-                    <p style="color:#999; font-size:0.9rem;">No hay doctores disponibles hoy.</p>
+                        <p class="empty-msg">No hay doctores disponibles.</p>
                     {% endfor %}
+
+                    <button class="btn-outline-full">Ver lista completa</button>
                 </div>
 
-                <div class="card history-table-card">
-                    <h4>Historial Rápido</h4>
-                    <table class="simple-table">
+                <div class="card">
+                    <h3 class="card-title">Registro de Asistencia</h3>
+                    <table class="history-table">
                         <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Medico</th>
-                                <th>Especialidad</th>
-                                <th>Estado</th>
-                            </tr>
+                            <tr><th>Fecha</th><th>Médico</th><th>Estado</th></tr>
                         </thead>
                         <tbody>
-                            {% for cita in historial_rapido %}
+                            {% for cita in historial_rapido|slice:":2" %}
                             <tr>
-                                <td>{{ cita.fecha|date:"d M y" }}</td>
+                                <td>{{ cita.fecha|date:"d M" }}</td>
                                 <td>{{ cita.doctor }}</td>
-                                <td>{{ cita.doctor.especialidad }}</td>
-                                <td>{{ cita.estado }}</td>
+                                <td>
+                                    {% if cita.estado == 'Pendiente' %}
+                                        <span class="badge badge-pending">Pendiente</span>
+                                    {% elif cita.estado == 'Asistida' or cita.estado == 'Completada' %}
+                                        <span class="badge badge-done">Asistida</span>
+                                    {% elif cita.estado == 'Cancelado' %}
+                                        <span class="badge badge-cancelled">No Asistió</span>
+                                    {% else %}
+                                        <span class="badge">{{ cita.estado }}</span>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% empty %}
-                            <tr><td>12 Ene 25</td><td>Dr. Pérez</td><td>Dermatología</td><td>Pendiente</td></tr>
-                            <tr><td>05 Ene 25</td><td>Dra. Moran</td><td>Pediatría</td><td>Asistida</td></tr>
+                            <tr>
+                                <td colspan="3" class="text-center-muted">
+                                    Sin registros recientes.
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
-            </div>
 
-        </div>
-    </div>
+                    <button class="btn-outline-full">Ver asistencia completa</button>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
 </body>
 </html>

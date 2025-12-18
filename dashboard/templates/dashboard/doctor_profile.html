@@ -87,25 +87,63 @@
             </div>
         </div>
 
-        <div class="card bottom-section">
-            <h3 class="section-title">Mis Citas Programadas</h3>
-            <table class="citas-table">
-                <thead><tr><th>Paciente</th><th>Hora</th><th>Motivo</th><th>Acciones</th></tr></thead>
-                <tbody>
-                    {% for cita in mis_citas %}
-                    <tr>
-                        <td>{{ cita.paciente }}</td>
-                        <td>{{ cita.fecha|date:"H:i A" }}</td>
-                        <td>{{ cita.motivo }}</td>
-                        <td><button style="color:#0084ff; border:none; background:none; cursor:pointer;">Ver</button></td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="4" style="text-align:center; padding:30px; color:#a0aec0;">No tienes citas programadas para hoy.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+     <!-- CITAS -->
+<div class="card">
+    <h3 class="section-title">Mis Citas Programadas</h3>
+
+    <table class="citas-table">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Hora</th>
+                <th>Motivo</th>
+                <th>
+                    Acciones
+                    <span class="menu-header">⋮</span>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for cita in mis_citas %}
+            <tr>
+                <td>{{ cita.paciente }}</td>
+                <td>{{ cita.fecha|date:"H:i" }}</td>
+                <td>{{ cita.motivo }}</td>
+                <td class="acciones-cell">
+
+                    {% if cita.estado == "Pendiente" %}
+                        <button class="btn-accept">✔ Aceptar</button>
+                    {% endif %}
+
+                    <div class="dropdown">
+                        <button class="dots-btn">⋮</button>
+                        <div class="dropdown-menu">
+                            <a href="{% url 'agenda_dia' %}">📅 Ver agenda</a>
+                            <a href="#">✅ Marcar completada</a>
+                            <a href="#">❌ Cancelar</a>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="empty">
+                    No tienes citas programadas para hoy.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="align-right">
+        <a href="{% url 'agenda_dia' %}" class="btn-secondary">
+            Ver agenda completa del día →
+        </a>
     </div>
+</div>
+
 
     <div id="config-data" 
          data-pdf-icon="{% static 'dashboard/img/image_260117.png' %}" 

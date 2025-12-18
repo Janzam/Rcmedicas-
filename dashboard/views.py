@@ -18,10 +18,10 @@ def dashboard_view(request):
         'historial_rapido': historial,
         'citas_pendientes': Cita.objects.filter(estado='Pendiente').count(),
         'historial_total': Cita.objects.count(),
-        'proxima_cita': {
-            'fecha': '12 Ene 2025', 'hora': '10:30 AM', 'doctor': 'Dr. López', 'especialidad': 'Dermatología'
-        }
+        'proxima_cita': None
+        
     }
+    
     return render(request, 'dashboard/dashboard.html', context)
 
 
@@ -218,3 +218,23 @@ def gestionar_cita_ajax(request):
 
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+    
+@login_required
+def agenda_dia_view(request):
+    """
+    Vista de la agenda diaria tipo calendario.
+    Por ahora puede mostrarse vacía sin problema.
+    """
+    if not hasattr(request.user, 'doctor'):
+        return redirect('dashboard')
+
+    doctor = request.user.doctor
+
+    # Más adelante puedes filtrar por día
+    citas = Cita.objects.filter(doctor=doctor).order_by('fecha')
+
+    context = {
+        'citas': citas
+    }
+
+    return render(request, 'dashboard/agenda_dia.html', context)

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda del Día | RCMedica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{% static 'dashboard/css/agenda_dia.css' %}">
+</head>
+<body>
+
+<header class="agenda-header">
+    <h1>Agenda Médica</h1>
+    <a href="{% url 'doctor_profile' %}" class="btn-back">← Volver al perfil</a>
+</header>
+
+<div class="agenda-container">
+
+    <!-- HORAS -->
+    <div class="hours-column">
+        {% for h in "08,09,10,11,12,13,14,15,16,17"|cut:"," %}
+            <div class="hour">{{ h }}:00</div>
+        {% endfor %}
+    </div>
+
+    <!-- DIAS -->
+    <div class="days-grid">
+        {% for day in "Lunes,Martes,Miércoles,Jueves,Viernes"|cut:"," %}
+        <div class="day-column">
+            <div class="day-header">{{ day }}</div>
+
+            <!-- EJEMPLO DE CITA (se renderiza cuando exista) -->
+            {% if citas %}
+                {% for cita in citas %}
+                <div class="event">
+                    <strong>{{ cita.paciente }}</strong>
+                    <span>{{ cita.fecha|date:"H:i" }} - {{ cita.motivo }}</span>
+
+                    <div class="dropdown">
+                        <button class="dots-btn">⋮</button>
+                        <div class="dropdown-menu">
+                            <p><b>Paciente:</b> {{ cita.paciente }}</p>
+                            <p><b>Motivo:</b> {{ cita.motivo }}</p>
+                            <p><b>Hora:</b> {{ cita.fecha|date:"H:i" }}</p>
+                            <hr>
+                            <a href="#">✅ Marcar completada</a>
+                            <a href="#">❌ Cancelar cita</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-day">
+                    Sin citas
+                </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>
+
