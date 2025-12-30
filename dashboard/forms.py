@@ -21,7 +21,7 @@ class DoctorUpdateForm(forms.ModelForm):
 class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
-        fields = ['doctor', 'fecha', 'hora', 'motivo'] # Ajusta según tus campos reales
+        fields = ['doctor', 'fecha', 'hora', 'motivo'] 
         widgets = {
             'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
             'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-input'}),

@@ -8,26 +8,20 @@ from django.contrib import messages
 from .models import Doctor, Cita, Certificado 
 from .forms import DoctorUpdateForm, CitaForm
 
-# ==========================================
 # 1. VISTAS DE PACIENTE / USUARIO GENERAL
-# ==========================================
 
 @login_required
 def dashboard_view(request):
     """Vista principal del Dashboard."""
     todos_los_doctores = Doctor.objects.all()
     
-    # Filtramos solo los disponibles
     doctores_disponibles = [doc for doc in todos_los_doctores if doc.esta_disponible]
     
-    # Intenta obtener el historial del paciente
     try:
         historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')[:5]
-        # Conteo real para el usuario
         citas_pendientes = Cita.objects.filter(paciente=request.user, estado='Pendiente').count()
         historial_total = Cita.objects.filter(paciente=request.user).count()
     except:
-        # Fallback si no hay citas o falla el filtro
         historial = []
         citas_pendientes = 0
         historial_total = 0
@@ -37,7 +31,7 @@ def dashboard_view(request):
         'historial_rapido': historial,
         'citas_pendientes': citas_pendientes,
         'historial_total': historial_total,
-        'proxima_cita': None # Aquí podrías agregar lógica para buscar la fecha más cercana futura
+        'proxima_cita': None 
     }
     
     return render(request, 'dashboard/dashboard.html', context)
@@ -48,11 +42,11 @@ def crear_cita_view(request):
         form = CitaForm(request.POST)
         if form.is_valid():
             cita = form.save(commit=False)
-            cita.paciente = request.user # Asigna el usuario actual como paciente
+            cita.paciente = request.user 
             cita.estado = 'Pendiente'
             cita.save()
             messages.success(request, '¡Tu cita ha sido agendada exitosamente!')
-            return redirect('dashboard') # Redirige al dashboard tras guardar
+            return redirect('dashboard') 
         else:
             messages.error(request, 'Por favor corrige los errores en el formulario.')
     else:
@@ -64,7 +58,7 @@ def lista_doctores_view(request):
     """
     NUEVA VISTA: Muestra la lista completa de doctores con tarjetas.
     """
-    # Obtenemos todos los doctores para mostrarlos en el grid
+    
     doctores = Doctor.objects.all()
     
     context = {
@@ -96,12 +90,10 @@ def borrar_historial(request):
     except Exception as e:
         messages.error(request, "Error al eliminar historial.")
         
-    return redirect('historial_completo') # Redirige a la URL configurada con name='historial_completo'
+    return redirect('historial_completo') 
 
-
-# ==========================================
 # 2. VISTAS DE DOCTOR
-# ==========================================
+
 
 @login_required
 def doctor_profile_view(request):
@@ -109,11 +101,8 @@ def doctor_profile_view(request):
         return redirect('dashboard')
         
     doctor = request.user.doctor 
-    
-    # Certificados activos (no eliminados)
-    lista_certificados = doctor.certificados.filter(fecha_eliminacion__isnull=True).order_by('-fecha_subida')
 
-    # Citas pendientes para el doctor
+    lista_certificados = doctor.certificados.filter(fecha_eliminacion__isnull=True).order_by('-fecha_subida')
     citas_pendientes = Cita.objects.filter(doctor=doctor, estado='Pendiente').order_by('fecha')
 
     context = {
@@ -144,7 +133,6 @@ def editar_perfil_doctor(request):
 
 @login_required
 def historial_citas(request):
-    """Historial visto desde el lado del DOCTOR"""
     if not hasattr(request.user, 'doctor'):
         return redirect('dashboard')
 
@@ -177,8 +165,6 @@ def ver_certificados(request):
         return redirect('dashboard')
     
     doctor = request.user.doctor
-
-    # 1. Limpieza automática de papelera (> 30 días)
     fecha_limite = timezone.now() - timedelta(days=30)
     certificados_vencidos = Certificado.objects.filter(
         doctor=doctor, 
@@ -189,7 +175,6 @@ def ver_certificados(request):
         cert.archivo.delete() 
         cert.delete() 
 
-    # 2. Obtener listas
     activos = Certificado.objects.filter(doctor=doctor, fecha_eliminacion__isnull=True).order_by('-fecha_subida')
     papelera = Certificado.objects.filter(doctor=doctor, fecha_eliminacion__isnull=False).order_by('-fecha_eliminacion')
     
@@ -223,9 +208,8 @@ def acciones_certificados(request):
     return redirect('ver_certificados')
 
 
-# ==========================================
+
 # 3. API / AJAX FUNCTIONS
-# ==========================================
 
 @login_required
 def subir_certificado_ajax(request):
@@ -266,7 +250,7 @@ def borrar_certificado_ajax(request):
             
             cert = get_object_or_404(Certificado, id=cert_id, doctor=doctor)
             
-            # Soft Delete (Mover a papelera)
+           
             cert.fecha_eliminacion = timezone.now()
             cert.save()
                 
