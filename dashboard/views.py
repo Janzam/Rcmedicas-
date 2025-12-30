@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages 
 from .models import Doctor, Cita, Certificado 
-from .forms import DoctorUpdateForm
+from .forms import DoctorUpdateForm, CitaForm
 
 # ==========================================
 # 1. VISTAS DE PACIENTE / USUARIO GENERAL
@@ -42,7 +42,23 @@ def dashboard_view(request):
     
     return render(request, 'dashboard/dashboard.html', context)
 
+@login_required
+def crear_cita_view(request):
+    if request.method == 'POST':
+        form = CitaForm(request.POST)
+        if form.is_valid():
+            cita = form.save(commit=False)
+            cita.paciente = request.user # Asigna el usuario actual como paciente
+            cita.estado = 'Pendiente'
+            cita.save()
+            messages.success(request, '¡Tu cita ha sido agendada exitosamente!')
+            return redirect('dashboard') # Redirige al dashboard tras guardar
+        else:
+            messages.error(request, 'Por favor corrige los errores en el formulario.')
+    else:
+        form = CitaForm()
 
+    return render(request, 'dashboard/nuevas_citas.html', {'form': form})
 @login_required
 def lista_doctores_view(request):
     """

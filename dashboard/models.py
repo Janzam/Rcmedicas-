@@ -40,8 +40,10 @@ class Cita(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     paciente = models.CharField(max_length=100)
     fecha = models.DateTimeField()
+    hora = models.TimeField()   # <--- AGREGA ESTA LÍNEA
     motivo = models.CharField(max_length=200)
     estado = models.CharField(max_length=20, default='Pendiente')
+    
 
     def __str__(self):
         return f"Cita {self.paciente} con {self.doctor}"

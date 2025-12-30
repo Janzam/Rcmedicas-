@@ -6,6 +6,7 @@ urlpatterns = [
     path('', views.dashboard_view, name='dashboard'),
     path('historial-completo/', views.historial_completo_view, name='historial_completo'),
     path('borrar-historial/', views.borrar_historial, name='borrar_historial'),
+    path('nueva-cita/', views.crear_cita_view, name='nueva_cita'),
     
     # NUEVA: Para ver la lista de doctores (tarjetas)
     path('lista-doctores/', views.lista_doctores_view, name='lista_doctores'),
