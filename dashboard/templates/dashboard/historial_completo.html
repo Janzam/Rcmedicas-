@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial Médico Completo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/historial_completo.css' %}">
+</head>
+<body class="bg-light">
+
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-plus-circle"></i> CareConnect
+        </div>
+        <div class="user-menu">
+            <span class="user-name">{{ user.username|default:'Usuario' }}</span>
+            <div class="avatar-container">
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=E91E63&color=fff" alt="Perfil" class="avatar">
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container history-layout">
+        
+        <div class="page-header-flex">
+            <div>
+               <a href="{% url 'dashboard' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                </a>
+                <h1 class="page-title mt-2">Historial Médico Completo</h1>
+                <p class="subtext">Consulta todas tus citas pasadas y futuras.</p>
+            </div>
+            
+            <button id="btn-borrar-historial" class="btn-danger">
+                <i class="fas fa-trash-alt"></i> Borrar Historial
+            </button>
+        </div>
+
+        <div class="card full-width-card">
+            <div class="table-responsive">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Doctor</th>
+                            <th>Especialidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cita in historial_completo %}
+                        <tr>
+                            <td class="fw-bold">{{ cita.fecha|date:"d M, Y" }}</td>
+                            <td>{{ cita.hora }}</td>
+                            <td>
+                                <div class="doc-profile-sm">
+                                    <div class="doc-icon"><i class="fas fa-user-md"></i></div>
+                                    <span>{{ cita.doctor }}</span>
+                                </div>
+                            </td>
+                            <td>{{ cita.especialidad }}</td>
+                            <td>
+                                {% if cita.estado == 'Completada' or cita.estado == 'Asistida' %}
+                                    <span class="badge badge-done">Completada</span>
+                                {% elif cita.estado == 'Pendiente' %}
+                                    <span class="badge badge-pending">Pendiente</span>
+                                {% elif cita.estado == 'Cancelado' %}
+                                    <span class="badge badge-cancelled">Cancelada</span>
+                                {% else %}
+                                    <span class="badge">{{ cita.estado }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn-icon" title="Ver detalles"><i class="far fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center-empty">
+                                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486747.png" alt="Vacio" style="width: 60px; opacity: 0.5; margin-bottom: 10px;">
+                                <p>No hay registros en tu historial.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+
+</body>
+</html>

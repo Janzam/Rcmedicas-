@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio de Especialistas - CareConnect</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/lista_doctor.css' %}">
+</head>
+<body class="bg-light">
+
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-plus-circle"></i> CareConnect
+        </div>
+        <div class="user-menu">
+            <span class="user-name">{{ user.username|default:'Usuario' }}</span>
+            <div class="avatar-container">
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=E91E63&color=fff" alt="Perfil" class="avatar">
+            </div>
+        </div>
+    </header>
+
+    <main class="page-container">
+        
+        <div class="page-header">
+            <div>
+                <a href="{% url 'dashboard' %}" class="btn-back">
+                    <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                </a>
+                <h1 class="page-title">Nuestros Especialistas</h1>
+                <p class="subtext">Encuentra al doctor adecuado para tu consulta.</p>
+            </div>
+            
+            <div class="search-bar-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Buscar por nombre o especialidad..." class="search-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="doctors-grid">
+            {% for doctor in doctores %}
+            <div class="doctor-card">
+                <div class="card-header-bg"></div>
+                
+                <div class="card-avatar">
+                    {% if doctor.foto %}
+                        <img src="{{ doctor.foto.url }}" alt="Dr. {{ doctor.usuario.last_name }}" style="object-fit: cover;">
+                    {% else %}
+                        <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Avatar Default">
+                    {% endif %}
+                </div>
+                
+                <div class="card-body">
+                    <h3 class="doc-name">{{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h3>
+                    <span class="doc-specialty">{{ doctor.especialidad }}</span>
+                    
+                    <div class="doc-stats">
+                        <div class="stat">
+                            <i class="fas fa-star text-yellow"></i>
+                            <span>4.8 (120)</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-briefcase-medical text-blue"></i>
+                            <span>5 años exp.</span>
+                        </div>
+                    </div>
+
+                    <div class="status-badge {% if doctor.esta_disponible %}available{% else %}busy{% endif %}">
+                        {% if doctor.esta_disponible %}
+                            <i class="fas fa-check-circle"></i> Disponible
+                        {% else %}
+                            <i class="fas fa-clock"></i> No Disponible
+                        {% endif %}
+                    </div>
+
+                    <a href="#" class="btn-appointment">
+                        Agendar Cita
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-user-md"></i>
+                <p>No hay doctores disponibles en este momento.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </main>
+
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+</body>
+</html>

@@ -65,7 +65,7 @@
                 </div>
                 <div class="stat-body">
                     <h2>{{ historial_total|default:"0" }} <span class="time">citas</span></h2>
-                    <a href="#" class="link-blue">Ver historial completo</a>
+                    <a href="#" id="btn-historial-completo" class="link-blue">Ver historial completo</a>
                 </div>
             </div>
         </section>
@@ -74,20 +74,21 @@
             
             <div class="card">
                 <div class="calendar-header">
-                    <i class="fas fa-chevron-left arrow-icon"></i>
-                    <h3>Enero 2025</h3>
-                    <i class="fas fa-chevron-right arrow-icon"></i>
+                    <i id="prev-month" class="fas fa-chevron-left arrow-icon" style="cursor: pointer;"></i>
+                    <h3 id="current-month">Cargando...</h3>
+                    <i id="next-month" class="fas fa-chevron-right arrow-icon" style="cursor: pointer;"></i>
                 </div>
-                <div class="calendar-grid">
-                    <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Mi</div><div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sa</div><div class="day-name">Do</div>
-                    <div class="day empty"></div><div class="day empty"></div>
-                    <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div>
-                    <div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div>
-                    <div class="day active-day">13</div><div class="day">14</div><div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div>
-                    <div class="day">20</div><div class="day">21</div><div class="day">22</div><div class="day">23</div><div class="day">24</div><div class="day">25</div><div class="day">26</div>
-                    <div class="day">27</div><div class="day">28</div><div class="day">29</div><div class="day">30</div><div class="day">31</div>
+                
+                <div class="calendar-grid" id="calendar-days">
+                    </div>
+
+                <div class="calendar-footer-msg">
+                    ✨ <em>"Tu salud es la mejor inversión que puedes hacer."</em>
                 </div>
-                <button class="btn-primary">+ Nueva Cita</button>
+                
+                <button id="btn-nueva-cita" class="btn-primary">
+                    <i class="fas fa-plus"></i> Nueva Cita
+                </button>
             </div>
 
             <div class="right-column-wrapper">
@@ -100,7 +101,7 @@
                         {% if doctor.foto %}
                             <img src="{{ doctor.foto.url }}" class="doc-img">
                         {% else %}
-                            <img src="https://ui-avatars.com/api/?name={{ doctor.usuario.first_name }}+{{ doctor.usuario.last_name }}&background=EBF4FF&color=2563EB" class="doc-img">
+                            <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" class="doc-img" alt="Avatar Default">
                         {% endif %}
                         <div class="doc-info">
                             <h4>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h4>
@@ -112,7 +113,7 @@
                         <p class="empty-msg">No hay doctores disponibles.</p>
                     {% endfor %}
 
-                    <button class="btn-outline-full">Ver lista completa</button>
+                    <button id="btn-lista-doctores" class="btn-outline-full">Ver lista completa</button>
                 </div>
 
                 <div class="card">
@@ -148,12 +149,15 @@
                         </tbody>
                     </table>
 
-                    <button class="btn-outline-full">Ver asistencia completa</button>
+                    <button id="btn-asistencia-completa" class="btn-outline-full">Ver asistencia completa</button>
                 </div>
 
             </div>
         </section>
 
     </main>
+
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+
 </body>
 </html>
