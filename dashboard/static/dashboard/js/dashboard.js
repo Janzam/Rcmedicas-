@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- 1. LÓGICA DE NAVEGACIÓN Y ACCIONES DEL DASHBOARD ---
-
     function irA(url) {
         window.location.href = url;
     }
@@ -39,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Botón: Borrar Historial (si existe en la página)
+    // Botón: Borrar Historial 
     const btnBorrarHistorial = document.getElementById('btn-borrar-historial');
     if (btnBorrarHistorial) {
         btnBorrarHistorial.addEventListener('click', function() {
@@ -112,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if(currMonth < 0) {
                 date = new Date(currYear, currMonth, new Date().getDate());
                 currYear = date.getFullYear();
-                currMonth = 11; // Diciembre
+                currMonth = 11; 
             }
             renderCalendar();
         });
@@ -122,13 +120,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if(currMonth > 11) {
                 date = new Date(currYear, currMonth, new Date().getDate());
                 currYear = date.getFullYear();
-                currMonth = 0; // Enero
+                currMonth = 0; 
             }
             renderCalendar();
         });
     }
 
-    // --- 3. LÓGICA DE BÚSQUEDA (Si estás en la lista de doctores) ---
+    // --- 3. LÓGICA DE BÚSQUEDA ---
     const searchInput = document.querySelector('.search-input');
     if (searchInput) {
         searchInput.addEventListener('keyup', function(e) {
