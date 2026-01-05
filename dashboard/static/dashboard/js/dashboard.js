@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // --- 1. LÓGICA DE NAVEGACIÓN Y ACCIONES DEL DASHBOARD ---
 
-    // Función auxiliar para redirigir
     function irA(url) {
         window.location.href = url;
     }
@@ -60,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const nextIcon = document.querySelector("#next-month");
 
     if (daysTag && currentMonthText) {
-        // Obtener fecha actual
         let date = new Date();
         let currYear = date.getFullYear();
         let currMonth = date.getMonth();
@@ -69,45 +67,34 @@ document.addEventListener('DOMContentLoaded', function() {
                         "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
         const renderCalendar = () => {
-            // Primer día del mes (0 Domingo, 1 Lunes...)
             let firstDayofMonth = new Date(currYear, currMonth, 1).getDay();
-            // Última fecha del mes actual
             let lastDateofMonth = new Date(currYear, currMonth + 1, 0).getDate();
-            // Última fecha del mes anterior
             let lastDayofLastMonth = new Date(currYear, currMonth, 0).getDate();
-            // Último día de la semana del mes actual
             let lastDayofMonth = new Date(currYear, currMonth, lastDateofMonth).getDay();
             
-            // Creamos los encabezados dentro del HTML para que no se borren
             let diasHTML = `
                 <div class="day-name">Do</div><div class="day-name">Lu</div><div class="day-name">Ma</div>
                 <div class="day-name">Mi</div><div class="day-name">Ju</div><div class="day-name">Vi</div><div class="day-name">Sa</div>
             `;
 
-            // Días del mes anterior (grisáceos)
             for (let i = firstDayofMonth; i > 0; i--) {
                 diasHTML += `<div class="day empty">${lastDayofLastMonth - i + 1}</div>`;
             }
 
-            // Días del mes actual
             for (let i = 1; i <= lastDateofMonth; i++) {
-                // Verificar si es hoy
                 let isToday = i === new Date().getDate() && currMonth === new Date().getMonth() 
                              && currYear === new Date().getFullYear() ? "active-day" : "";
                 
                 diasHTML += `<div class="day ${isToday}">${i}</div>`;
             }
 
-            // Días del mes siguiente (relleno)
             for (let i = lastDayofMonth; i < 6; i++) {
                 diasHTML += `<div class="day empty">${i - lastDayofMonth + 1}</div>`;
             }
 
-            // Actualizar el DOM
             currentMonthText.innerText = `${months[currMonth]} ${currYear}`;
             daysTag.innerHTML = diasHTML;
 
-            // Agregar evento click a los días
             const days = document.querySelectorAll(".calendar-grid .day:not(.empty)");
             days.forEach(day => {
                 day.addEventListener("click", () => {

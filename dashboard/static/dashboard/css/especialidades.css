@@ -1,7 +1,3 @@
-/* =========================================
-   Estilos para la página de Especialidades
-   ========================================= */
-
 .spec-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -38,7 +34,7 @@
     margin: 0 auto 15px;
     font-size: 1.8rem;
     color: white;
-    /* El color de fondo se define en el HTML porque es dinámico */
+   
 }
 
 .spec-name {

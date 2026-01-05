@@ -1,7 +1,3 @@
-/* =========================================
-   ARCHIVO: lista_doctor.css
-   ========================================= */
-
 :root {
     --primary-blue: #2563EB;
     --primary-dark: #1E40AF;
@@ -19,7 +15,6 @@ body {
     margin: 0;
 }
 
-/* --- Navbar (Copiada para mantener estilo) --- */
 .navbar {
     background-color: var(--primary-blue);
     color: var(--white);
@@ -30,20 +25,45 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.logo { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-.user-menu { display: flex; align-items: center; gap: 15px; font-size: 1rem; }
-.user-name { font-weight: 500; }
-.avatar-container { width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); overflow: hidden; }
-.avatar { width: 100%; height: 100%; object-fit: cover; }
+.logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-/* --- Layout Principal --- */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1rem;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+.avatar-container {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.8);
+    overflow: hidden;
+}
+
+.avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .page-container {
     max-width: 1200px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* --- Header y Buscador --- */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -53,8 +73,17 @@ body {
     gap: 20px;
 }
 
-.page-title { margin: 10px 0 5px 0; font-size: 2rem; font-weight: 800; color: var(--text-dark); }
-.subtext { color: var(--text-gray); margin: 0; }
+.page-title {
+    margin: 10px 0 5px 0;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-dark);
+}
+
+.subtext {
+    color: var(--text-gray);
+    margin: 0;
+}
 
 .btn-back {
     text-decoration: none;
@@ -66,9 +95,11 @@ body {
     gap: 8px;
     transition: color 0.3s;
 }
-.btn-back:hover { color: var(--primary-blue); }
 
-/* Buscador */
+.btn-back:hover {
+    color: var(--primary-blue);
+}
+
 .search-bar-container {
     display: flex;
     gap: 10px;
@@ -91,13 +122,13 @@ body {
 
 .search-input {
     width: 100%;
-    padding: 12px 12px 12px 45px; /* Espacio para el icono */
+    padding: 12px 12px 12px 45px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
-    box-sizing: border-box; /* Importante para que no se salga */
+    box-sizing: border-box;
 }
 
 .search-input:focus {
@@ -114,9 +145,12 @@ body {
     color: var(--text-gray);
     transition: all 0.2s;
 }
-.btn-filter:hover { background: #F3F4F6; color: var(--text-dark); }
 
-/* --- Grid de Tarjetas --- */
+.btn-filter:hover {
+    background: #F3F4F6;
+    color: var(--text-dark);
+}
+
 .doctors-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -149,13 +183,17 @@ body {
     height: 90px;
     border-radius: 50%;
     border: 4px solid var(--white);
-    margin: -45px auto 10px auto; /* Sube la imagen para que pise el fondo */
+    margin: -45px auto 10px auto;
     overflow: hidden;
     background-color: var(--white);
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.card-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 .card-body {
     padding: 15px 20px 25px 20px;
@@ -166,10 +204,20 @@ body {
     align-items: center;
 }
 
-.doc-name { margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
-.doc-specialty { font-size: 0.9rem; color: var(--text-gray); margin-bottom: 15px; display: block; }
+.doc-name {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
 
-/* Stats (Rating y Experiencia) */
+.doc-specialty {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    margin-bottom: 15px;
+    display: block;
+}
+
 .doc-stats {
     display: flex;
     gap: 15px;
@@ -177,11 +225,24 @@ body {
     font-size: 0.8rem;
     color: var(--text-dark);
 }
-.stat { display: flex; align-items: center; gap: 5px; background: #F3F4F6; padding: 4px 10px; border-radius: 20px; }
-.text-yellow { color: #F59E0B; }
-.text-blue { color: var(--primary-blue); }
 
-/* Badge de Estado */
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #F3F4F6;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.text-yellow {
+    color: #F59E0B;
+}
+
+.text-blue {
+    color: var(--primary-blue);
+}
+
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -193,12 +254,18 @@ body {
     margin-bottom: 20px;
 }
 
-.status-badge.available { background-color: #ECFDF5; color: #059669; }
-.status-badge.busy { background-color: #FEF2F2; color: #DC2626; }
+.status-badge.available {
+    background-color: #ECFDF5;
+    color: #059669;
+}
 
-/* Botón Acción */
+.status-badge.busy {
+    background-color: #FEF2F2;
+    color: #DC2626;
+}
+
 .btn-appointment {
-    margin-top: auto; /* Empuja el botón al fondo */
+    margin-top: auto;
     background-color: var(--primary-blue);
     color: var(--white);
     text-decoration: none;
@@ -210,16 +277,38 @@ body {
     transition: background-color 0.2s;
 }
 
-.btn-appointment:hover { background-color: var(--primary-dark); }
+.btn-appointment:hover {
+    background-color: var(--primary-dark);
+}
 
-/* Empty State */
-.empty-state { grid-column: 1 / -1; text-align: center; padding: 50px; color: var(--text-gray); }
-.empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.3; }
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px;
+    color: var(--text-gray);
+}
 
-/* Responsive */
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
 @media (max-width: 640px) {
-    .page-header { flex-direction: column; align-items: flex-start; }
-    .search-bar-container { max-width: 100%; }
-    .navbar { padding: 1rem; }
-    .user-name { display: none; }
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-bar-container {
+        max-width: 100%;
+    }
+
+    .navbar {
+        padding: 1rem;
+    }
+
+    .user-name {
+        display: none;
+    }
 }

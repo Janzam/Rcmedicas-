@@ -1,26 +1,20 @@
-/* =========================================
-   ARCHIVO: historial_completo.css
-   (Incluye estilos base para la navbar y específicos para la página de historial)
-   ========================================= */
-
-/* --- 1. Variables y Estilos Base (Necesarios para la Navbar) --- */
 :root {
-    --primary-blue: #2563EB; /* Azul principal */
+    --primary-blue: #2563EB;
     --white: #FFFFFF;
     --text-dark: #111827;
     --text-gray: #6B7280;
 }
 
 body.bg-light {
-    background-color: #F9FAFB; /* Fondo gris claro para la página */
+    background-color: #F9FAFB;
     color: var(--text-dark);
     font-family: 'Inter', sans-serif;
-    margin: 0; /* Eliminar márgenes por defecto del body */
+    margin: 0;
 }
 
-/* --- 2. NAVBAR (Barra Azul) --- */
+/* NAVBAR */
 .navbar {
-    background-color: var(--primary-blue); /* ¡Aquí está el azul! */
+    background-color: var(--primary-blue);
     color: var(--white);
     padding: 1rem 2rem;
     display: flex;
@@ -62,19 +56,13 @@ body.bg-light {
     object-fit: cover;
 }
 
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DEL HISTORIAL
-   ========================================= */
-
-/* --- 3. Layout y Contenedor Principal --- */
+/* LAYOUT */
 .history-layout {
     max-width: 1100px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-/* Cabecera Flexible */
 .page-header-flex {
     display: flex;
     justify-content: space-between;
@@ -97,9 +85,7 @@ body.bg-light {
     margin-top: 5px;
 }
 
-/* --- 4. Botones --- */
-
-/* Botón Volver */
+/* BOTONES */
 .btn-back {
     text-decoration: none;
     color: var(--text-gray);
@@ -116,7 +102,6 @@ body.bg-light {
     color: var(--primary-blue);
 }
 
-/* Botón Borrar (Rojo) */
 .btn-danger {
     background-color: #FEF2F2;
     color: #DC2626;
@@ -140,12 +125,11 @@ body.bg-light {
     transform: translateY(-1px);
 }
 
-/* --- 5. Tarjeta y Tabla --- */
-
+/* CARD Y TABLA */
 .full-width-card {
     background: var(--white);
     border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
                 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     overflow: hidden;
     border: 1px solid #E5E7EB;
@@ -190,8 +174,7 @@ body.bg-light {
     border-bottom: none;
 }
 
-/* --- 6. Componentes Internos de la Tabla --- */
-
+/* COMPONENTES TABLA */
 .doc-profile-sm {
     display: flex;
     align-items: center;
@@ -226,10 +209,16 @@ body.bg-light {
     background-color: #EFF6FF;
 }
 
-.fw-bold { font-weight: 600; color: var(--text-dark); }
-.mt-2 { margin-top: 8px; }
+.fw-bold {
+    font-weight: 600;
+    color: var(--text-dark);
+}
 
-/* Mensaje vacío */
+.mt-2 {
+    margin-top: 8px;
+}
+
+/* VACÍO */
 .text-center-empty {
     text-align: center;
     padding: 80px 20px !important;
@@ -247,8 +236,7 @@ body.bg-light {
     font-weight: 500;
 }
 
-/* --- 7. Badges (Estados) --- */
-
+/* BADGES */
 .badge {
     padding: 4px 12px;
     border-radius: 999px;
@@ -257,27 +245,45 @@ body.bg-light {
     display: inline-block;
 }
 
-.badge-done { background-color: #ECFDF5; color: #059669; border: 1px solid #A7F3D0; }
-.badge-pending { background-color: #FFFBEB; color: #D97706; border: 1px solid #FDE68A; }
-.badge-cancelled { background-color: #F3F4F6; color: var(--text-gray); border: 1px solid #E5E7EB; }
+.badge-done {
+    background-color: #ECFDF5;
+    color: #059669;
+    border: 1px solid #A7F3D0;
+}
 
-/* --- 8. Responsive --- */
+.badge-pending {
+    background-color: #FFFBEB;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+
+.badge-cancelled {
+    background-color: #F3F4F6;
+    color: var(--text-gray);
+    border: 1px solid #E5E7EB;
+}
+
+/* RESPONSIVE */
 @media (max-width: 640px) {
     .navbar {
         padding: 1rem;
     }
+
     .user-name {
-        display: none; /* Ocultar nombre en móviles */
+        display: none;
     }
+
     .page-header-flex {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
     }
+
     .btn-danger {
         width: 100%;
         justify-content: center;
     }
+
     .history-layout {
         padding: 0 15px;
         margin-top: 20px;
