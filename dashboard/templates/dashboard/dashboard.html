@@ -52,7 +52,7 @@
                 <div class="stat-body">
                     <h2>{{ citas_pendientes|default:"0" }}</h2>
                     {% if citas_pendientes and citas_pendientes > 0 %}
-                        <a href="#" class="link-blue">Ver todas</a>
+                        <a href="{% url 'ver_citas_pendientes' %}" class="link-blue">Ver todas</a>
                     {% else %}
                         <span class="subtext">Todo al día</span>
                     {% endif %}
@@ -65,7 +65,7 @@
                 </div>
                 <div class="stat-body">
                     <h2>{{ historial_total|default:"0" }} <span class="time">citas</span></h2>
-                    <a href="#" id="btn-historial-completo" class="link-blue">Ver historial completo</a>
+                    <a href="{% url 'ver_asistencia' %}" class="link-blue">Ver historial completo</a>
                 </div>
             </div>
         </section>
@@ -86,7 +86,7 @@
                     ✨ <em>"Tu salud es la mejor inversión que puedes hacer."</em>
                 </div>
                 
-                <a href="{% url 'nueva_cita' %}" style="text-decoration: none;">
+                <a href="{% url 'especialidades' %}" style="text-decoration: none;">
                     <button id="btn-nueva-cita" class="btn-primary">
                         <i class="fas fa-plus"></i> Nueva Cita
                     </button>
@@ -96,9 +96,9 @@
             <div class="right-column-wrapper">
                 
                 <div class="card">
-                    <h3 class="card-title">Doctores disponibles</h3>
+                    <h3 class="card-title">Doctores Recientes</h3>
                     
-                    {% for doctor in doctores_disponibles|slice:":3" %}
+                    {% for doctor in doctores_recientes %}
                     <div class="doctor-card-inner">
                         {% if doctor.foto %}
                             <img src="{{ doctor.foto.url }}" class="doc-img">
@@ -108,14 +108,19 @@
                         <div class="doc-info">
                             <h4>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h4>
                             <p class="specialty">{{ doctor.especialidad }}</p>
-                            <p class="availability">Lun, Mie, Vie</p>
+                            <p class="availability">Visitado recientemente</p>
                         </div>
                     </div>
                     {% empty %}
-                        <p class="empty-msg">No hay doctores disponibles.</p>
+                        <div class="empty-state-doc" style="text-align:center; padding: 20px 0;">
+                            <i class="fas fa-user-md" style="font-size: 2rem; color: #ddd; margin-bottom:10px;"></i>
+                            <p class="empty-msg">Aún no tienes doctores frecuentes.</p>
+                        </div>
                     {% endfor %}
 
-                    <button id="btn-lista-doctores" class="btn-outline-full">Ver lista completa</button>
+                    <a href="{% url 'especialidades' %}" style="text-decoration: none; display: block; margin-top: 15px;">
+                        <button class="btn-outline-full" style="width: 100%; cursor: pointer;">Buscar especialista</button>
+                    </a>
                 </div>
 
                 <div class="card">
@@ -151,7 +156,9 @@
                         </tbody>
                     </table>
 
-                    <button id="btn-asistencia-completa" class="btn-outline-full">Ver asistencia completa</button>
+                    <a href="{% url 'ver_asistencia' %}" style="text-decoration: none; display: block; margin-top: 15px;">
+                        <button class="btn-outline-full" style="width: 100%; cursor: pointer;">Ver asistencia completa</button>
+                    </a>
                 </div>
 
             </div>

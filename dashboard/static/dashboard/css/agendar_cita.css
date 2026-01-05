@@ -1,0 +1,103 @@
+/* Contenedor principal */
+.booking-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Tarjeta de resumen del doctor */
+.doctor-summary {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.doctor-summary h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.doctor-summary p {
+    color: #2563EB;
+    font-weight: 500;
+    margin: 5px 0;
+}
+
+/* Imagen del doctor */
+.doc-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid #E3F2FD;
+}
+
+/* Tarjeta del formulario */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.form-card h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* Campos del formulario */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    box-sizing: border-box; 
+}
+
+/* Botón de confirmar */
+.btn-confirm {
+    width: 100%;
+    padding: 14px;
+    background: #2563EB;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+.btn-confirm:hover {
+    background: #1d4ed8;
+}
+
+/* Enlace de volver */
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #6B7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+    color: #374151;
+}

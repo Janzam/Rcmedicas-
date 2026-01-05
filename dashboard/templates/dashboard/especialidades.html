@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Especialidades - CareConnect</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'dashboard/css/cliente_interfaz.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/especialidades.css' %}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">
+            <i class="fas fa-plus-circle"></i> CareConnect
+        </div>
+        <div class="user-menu">
+            <div class="avatar-container">
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=E91E63&color=fff" class="avatar" alt="Avatar">
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        
+        <a href="{% url 'dashboard' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Dashboard
+        </a>
+
+        <h1 class="page-title">Selecciona una Especialidad</h1>
+        <p class="subtext">Elige el área médica para ver los especialistas disponibles.</p>
+
+        <section class="spec-grid">
+            {% for esp in especialidades %}
+            <a href="{% url 'lista_doctores_filtro' esp.nombre %}" class="spec-card">
+                <div class="icon-circle" style="background-color: {{ esp.color }};">
+                    <i class="fas {{ esp.icono }}"></i>
+                </div>
+                <div class="spec-name">{{ esp.nombre }}</div>
+            </a>
+            {% endfor %}
+        </section>
+
+    </main>
+
+</body>
+</html>

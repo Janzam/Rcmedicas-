@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/cliente_interfaz.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/agendar_cita.css' %}">
+</head>
+<body>
+
+    <div class="booking-container">
+        
+        <div class="doctor-summary">
+            {% if doctor.foto %}
+                <img src="{{ doctor.foto.url }}" alt="Doctor" class="doc-avatar-large">
+            {% else %}
+                <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" class="doc-avatar-large">
+            {% endif %}
+            
+            <h2>Dr. {{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h2>
+            <p>{{ doctor.especialidad }}</p>
+        </div>
+
+        <div class="form-card">
+            <h3>Detalles de la consulta</h3>
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label><i class="far fa-calendar"></i> Fecha deseada</label>
+                    <input type="date" name="fecha" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="far fa-clock"></i> Hora preferida</label>
+                    <input type="time" name="hora" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="far fa-comment-alt"></i> Síntomas o motivo</label>
+                    <textarea name="motivo" class="form-control" rows="3" placeholder="Describe brevemente cómo te sientes..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-confirm">Confirmar Cita</button>
+            </form>
+        </div>
+
+        <a href="javascript:history.back()" class="back-link">Cancelar y volver</a>
+    </div>
+
+</body>
+</html>

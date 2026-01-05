@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historial de Asistencia</title>
+    <title>Mis Próximas Citas</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
@@ -15,7 +15,7 @@
     <div class="attendance-container">
         
         <div class="page-header">
-            <h1 class="page-title">Registro de Asistencia Completo</h1>
+            <h1 class="page-title">Próximas Citas Programadas</h1>
             <a href="{% url 'dashboard' %}" class="btn-back">
                 <i class="fas fa-arrow-left"></i> Volver al Dashboard
             </a>
@@ -28,7 +28,7 @@
                         <th>Fecha</th>
                         <th>Hora</th>
                         <th>Médico</th>
-                        <th>Especialidad</th> <th>Motivo</th>
+                        <th>Especialidad</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -36,31 +36,32 @@
                     {% for cita in citas %}
                     <tr>
                         <td class="date-column">
-                            <i class="far fa-calendar-alt"></i> {{ cita.fecha|date:"d M, Y" }}
+                            <i class="far fa-calendar-check" style="color: var(--primary-blue);"></i> 
+                            {{ cita.fecha|date:"d M, Y" }}
                         </td>
-                        <td>{{ cita.hora|time:"H:i" }}</td>
+                        <td style="font-weight: bold;">{{ cita.hora|time:"H:i" }}</td>
                         <td>
                             <div class="doctor-info">
                                 Dr. {{ cita.doctor.usuario.last_name }}
                             </div>
                         </td>
-                        <td style="color: #64748b;">
-                            {{ cita.doctor.especialidad }}
+                        <td style="color: var(--text-gray);">
+                             {{ cita.doctor.especialidad }}
                         </td>
-                        <td>{{ cita.motivo|truncatechars:30 }}</td>
                         <td>
-                            <span class="status-badge 
-                                {% if cita.estado == 'Pendiente' %}pendiente
-                                {% elif cita.estado == 'Completada' %}completada
-                                {% else %}cancelada{% endif %}">
-                                {{ cita.estado }}
+                            <span class="status-badge pendiente">
+                                Programada
                             </span>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" style="text-align:center; padding: 30px;">
-                            No tienes registros de asistencia aún.
+                        <td colspan="5" style="text-align:center; padding: 40px;">
+                            <i class="far fa-calendar-times" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 10px;"></i>
+                            <p style="color: #64748b;">No tienes citas pendientes.</p>
+                            <a href="{% url 'especialidades' %}" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">
+                                ¿Quieres agendar una nueva?
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}

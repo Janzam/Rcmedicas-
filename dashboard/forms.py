@@ -21,10 +21,9 @@ class DoctorUpdateForm(forms.ModelForm):
 class CitaForm(forms.ModelForm):
     class Meta:
         model = Cita
-        fields = ['doctor', 'fecha', 'hora', 'motivo'] 
+        fields = ['fecha', 'hora', 'motivo'] 
         widgets = {
             'fecha': forms.DateInput(attrs={'type': 'date', 'class': 'form-input'}),
             'hora': forms.TimeInput(attrs={'type': 'time', 'class': 'form-input'}),
             'motivo': forms.Textarea(attrs={'rows': 3, 'class': 'form-input', 'placeholder': 'Describa brevemente sus síntomas...'}),
-            'doctor': forms.Select(attrs={'class': 'form-input select-arrow'}),
         }

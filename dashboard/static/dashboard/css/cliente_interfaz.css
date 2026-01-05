@@ -82,7 +82,6 @@ a {
     box-shadow: var(--shadow);
     border: 1px solid #E5E7EB;
     margin-bottom: 1.5rem;
-    /* Esto asegura que el botón flotante no se salga de la tarjeta */
     overflow: hidden; 
 }
 
@@ -163,10 +162,7 @@ a {
     grid-template-columns: 1.5fr 1fr;
     gap: 1.5rem;
 }
-
-/* ======================================================= */
-/* --- CALENDARIO (Números grandes, Compacto, Botón pequeño) --- */
-/* ======================================================= */
+/* --- CALENDARIO --- */
 
 .calendar-header {
     display: flex;
@@ -200,10 +196,9 @@ a {
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    /* Espacio muy pequeño entre círculos para compactar */
     gap: 4px; 
     justify-items: center; 
-    margin-bottom: 1rem; /* Margen inferior reducido */
+    margin-bottom: 1rem; 
 }
 
 .day-name {
@@ -215,7 +210,6 @@ a {
 }
 
 .day {
-    /* TAMAÑO DE CÍRCULOS (Grandes) */
     width: 44px;
     height: 44px;
     
@@ -262,8 +256,6 @@ a {
     font-size: 0.9rem;
     cursor: pointer;
     box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-    
-    /* Flotar a la derecha y tamaño auto */
     float: right;
     width: auto;
     display: inline-block;
@@ -274,7 +266,6 @@ a {
     background: #1D4ED8;
     transform: translateY(-1px);
 }
-/* ======================================================= */
 
 
 /* --- COLUMNA DERECHA --- */
@@ -415,7 +406,6 @@ a {
         gap: 2px;
     }
     
-    /* En móviles reducimos un poco el tamaño para que quepan */
     .day {
         width: 38px;
         height: 38px;

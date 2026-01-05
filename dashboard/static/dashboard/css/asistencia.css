@@ -1,0 +1,128 @@
+:root {
+    --primary-blue: #3b82f6;
+    --primary-hover: #2563eb;
+    --bg-light: #f8fafc;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    
+    /* Colores de estado */
+    --status-pending-bg: #fef3c7;
+    --status-pending-text: #d97706; 
+    --status-confirmed-bg: #d1fae5;
+    --status-confirmed-text: #059669; 
+    --status-cancelled-bg: #fee2e2;
+    --status-cancelled-text: #dc2626; 
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: 'Inter', sans-serif;
+}
+
+.attendance-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+/* Tarjeta principal */
+.attendance-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden; 
+    border: 1px solid var(--border-color);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th {
+    background-color: #f1f5f9;
+    color: var(--text-gray);
+    font-weight: 600;
+    text-align: left;
+    padding: 16px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.custom-table td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark);
+    vertical-align: middle;
+}
+
+.custom-table tr:last-child td {
+    border-bottom: none;
+}
+
+.custom-table tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Estilos específicos para columnas */
+.doctor-info {
+    font-weight: 500;
+}
+
+.date-column {
+    color: var(--text-gray);
+}
+
+/* Badges de Estado */
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status-badge.pendiente {
+    background-color: var(--status-pending-bg);
+    color: var(--status-pending-text);
+}
+
+.status-badge.completada {
+    background-color: var(--status-confirmed-bg);
+    color: var(--status-confirmed-text);
+}
+
+.status-badge.cancelada {
+    background-color: var(--status-cancelled-bg);
+    color: var(--status-cancelled-text);
+}
+
+/* Botón de volver */
+.btn-back {
+    text-decoration: none;
+    color: var(--text-gray);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s;
+}
+
+.btn-back:hover {
+    color: var(--primary-blue);
+}

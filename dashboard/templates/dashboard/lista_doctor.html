@@ -60,17 +60,6 @@
                     <h3 class="doc-name">{{ doctor.usuario.first_name }} {{ doctor.usuario.last_name }}</h3>
                     <span class="doc-specialty">{{ doctor.especialidad }}</span>
                     
-                    <div class="doc-stats">
-                        <div class="stat">
-                            <i class="fas fa-star text-yellow"></i>
-                            <span>4.8 (120)</span>
-                        </div>
-                        <div class="stat">
-                            <i class="fas fa-briefcase-medical text-blue"></i>
-                            <span>5 años exp.</span>
-                        </div>
-                    </div>
-
                     <div class="status-badge {% if doctor.esta_disponible %}available{% else %}busy{% endif %}">
                         {% if doctor.esta_disponible %}
                             <i class="fas fa-check-circle"></i> Disponible
@@ -79,7 +68,7 @@
                         {% endif %}
                     </div>
 
-                    <a href="#" class="btn-appointment">
+                    <a href="{% url 'agendar_cita_doctor' doctor.id %}" class="btn-appointment">
                         Agendar Cita
                     </a>
                 </div>

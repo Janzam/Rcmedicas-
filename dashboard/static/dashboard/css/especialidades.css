@@ -1,0 +1,62 @@
+/* =========================================
+   Estilos para la página de Especialidades
+   ========================================= */
+
+.spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.spec-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #f0f0f0;
+}
+
+.spec-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: #e0e0e0;
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 1.8rem;
+    color: white;
+    /* El color de fondo se define en el HTML porque es dinámico */
+}
+
+.spec-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.back-btn:hover { 
+    color: #333; 
+}
