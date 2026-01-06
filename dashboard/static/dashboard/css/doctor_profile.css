@@ -2,6 +2,9 @@
     --primary-blue: #0084ff;
     --text-dark: #333;
     --bg-gray: #f4f6f8;
+    --success-bg: #ecfdf5;
+    --success-text: #047857;
+    --success-hover: #10b981;
 }
 
 body {
@@ -11,6 +14,7 @@ body {
     padding: 0;
 }
 
+/* --- NAVBAR --- */
 .navbar {
     background-color: var(--primary-blue);
     color: white;
@@ -25,14 +29,22 @@ body {
     opacity: 0.9;
 }
 
+/* --- LAYOUT GRID PRINCIPAL --- */
 .main-container {
     max-width: 1100px;
     margin: 30px auto;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: 350px 1fr;
+    /* Columna izquierda fija, derecha flexible */
+    grid-template-columns: 350px 1fr; 
     gap: 30px;
     align-items: start;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 .card {
@@ -43,6 +55,14 @@ body {
     border: 1px solid #e1e4e8;
 }
 
+/* CARTA DE ABAJO (Full Width) */
+.bottom-section {
+    grid-column: 1 / -1; 
+    margin-top: 10px;
+    min-height: 200px;
+}
+
+/* --- HEADER PERFIL --- */
 .profile-header {
     display: flex;
     align-items: center;
@@ -80,6 +100,7 @@ body {
     margin: 20px 0;
 }
 
+/* --- INFO --- */
 .info-row {
     margin-bottom: 12px;
     font-size: 0.95rem;
@@ -117,6 +138,7 @@ body {
     color: #2d3748;
 }
 
+/* --- TITULOS ESTÁNDAR --- */
 .section-title {
     font-family: 'Merriweather', serif;
     font-size: 1.3rem;
@@ -124,6 +146,8 @@ body {
     font-weight: 600;
     color: #1a202c;
     margin-top: 0;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
 }
 
 .about-box {
@@ -134,12 +158,10 @@ body {
     font-family: 'Merriweather', serif;
     color: #4a5568;
     line-height: 1.6;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
     border-radius: 4px;
 }
 
+/* --- CERTIFICADOS --- */
 .cert-header {
     display: flex;
     justify-content: space-between;
@@ -209,36 +231,6 @@ body {
     margin-right: 15px;
 }
 
-.file-actions {
-    display: flex;
-    gap: 15px;
-    flex-shrink: 0;
-}
-
-.action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    padding: 0;
-    transition: opacity 0.2s;
-    color: #718096;
-}
-
-.action-btn:hover {
-    opacity: 0.7;
-    color: #2d3748;
-}
-
-.files-list .file-row:nth-child(n+4) {
-    display: none;
-}
-
-.files-list.expanded .file-row:nth-child(n+4) {
-    display: flex;
-    animation: fadeIn 0.5s ease;
-}
-
 .view-all-link {
     display: block;
     text-align: right;
@@ -250,18 +242,11 @@ body {
     font-weight: 500;
 }
 
-.view-all-link:hover {
-    text-decoration: underline;
-}
-
-.bottom-section {
-    grid-column: 1 / -1;
-    margin-top: 10px;
-}
-
+/* --- TABLA DE CITAS --- */
 .citas-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 5px; /* Reducido un poco porque ahora el header tiene padding */
 }
 
 .citas-table th {
@@ -271,7 +256,8 @@ body {
     font-weight: 600;
     font-family: 'Merriweather', serif;
     color: #4a5568;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 0.9rem;
 }
 
 .citas-table td {
@@ -279,67 +265,75 @@ body {
     border-bottom: 1px solid #edf2f7;
     color: #4a5568;
     font-size: 0.95rem;
+    vertical-align: middle;
 }
 
-.acciones-cell {
-    display: flex;
+/* Estado vacío limpio (SIN TAZA) */
+.empty {
+    text-align: center;
+    padding: 30px;
+    color: #a0aec0;
+    font-style: italic;
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+/* Botón Atender */
+.btn-accept {
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-}
-
-.dots-btn {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.dropdown {
-    position: relative;
-}
-
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 25px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    min-width: 180px;
-    z-index: 100;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 8px 12px;
+    background-color: var(--success-bg);
+    color: var(--success-text);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid #d1fae5;
+    transition: all 0.2s;
     text-decoration: none;
-    color: #333;
-    font-size: 14px;
 }
 
-.dropdown-menu a:hover {
-    background: #f5f7fa;
+.btn-accept:hover {
+    background-color: var(--success-hover);
+    color: white;
+    border-color: var(--success-hover);
 }
-
-.dropdown:hover .dropdown-menu {
-    display: block;
-}
-
-.menu-header {
-    margin-left: 6px;
-    font-weight: bold;
-}
-
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- NUEVO HEADER CITAS (Título izq - Botón der) --- */
+.citas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+}
+
+.title-simple {
+    font-family: 'Merriweather', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin: 0;
+}
+
+.btn-ver-agenda-top {
+    color: var(--primary-blue);
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-weight: 600;
+    background-color: #f0f9ff;
+    padding: 6px 15px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.btn-ver-agenda-top:hover {
+    background-color: var(--primary-blue);
+    color: white;
 }

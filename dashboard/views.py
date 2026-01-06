@@ -8,13 +8,10 @@ from django.contrib import messages
 from .models import Doctor, Cita, Certificado 
 from .forms import DoctorUpdateForm, CitaForm
 
-
-# 1. VISTAS DE PACIENTE / USUARIO GENERAL
+# 1. VISTAS DE PACIENTE / GENERAL
 @login_required
 def dashboard_view(request):
-    
     citas_historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')
-    
     doctores_recientes = []
     ids_vistos = set()
     
@@ -26,7 +23,6 @@ def dashboard_view(request):
     hoy = timezone.now().date()
     
     try:
-        
         historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')[:5]
         citas_pendientes = Cita.objects.filter(paciente=request.user, estado='Pendiente').count()
         historial_total = Cita.objects.filter(paciente=request.user).count()
@@ -34,11 +30,7 @@ def dashboard_view(request):
         proxima_cita = Cita.objects.filter(
             paciente=request.user,
             fecha__gte=hoy
-        ).exclude(
-            estado='Cancelado'
-        ).exclude(
-            estado='Rechazada'
-        ).order_by('fecha', 'hora').first()
+        ).exclude(estado='Cancelado').exclude(estado='Rechazada').order_by('fecha', 'hora').first()
         
     except Exception as e:
         print(f"Error cargando dashboard: {e}")
@@ -87,25 +79,16 @@ def especialidades_view(request):
         {'nombre': 'Oftalmología', 'icono': 'fa-eye', 'color': '#3F51B5'},
         {'nombre': 'Traumatología', 'icono': 'fa-bone', 'color': '#795548'},
     ]
-    
     return render(request, 'dashboard/especialidades.html', {'especialidades': lista_especialidades})
 
 @login_required
 def lista_doctores_view(request, especialidad):
-    """
-    Muestra la lista de doctores FILTRADA por la especialidad seleccionada.
-    """
     doctores = Doctor.objects.filter(especialidad__iexact=especialidad)
-    
-    context = {
-        'doctores': doctores,
-        'especialidad_actual': especialidad
-    }
+    context = {'doctores': doctores, 'especialidad_actual': especialidad}
     return render(request, 'dashboard/lista_doctor.html', context)
 
 @login_required
 def historial_completo_view(request):
-    """Vista para ver el historial completo del PACIENTE."""
     try:
         citas = Cita.objects.filter(paciente=request.user).order_by('-fecha')
     except:
@@ -115,7 +98,6 @@ def historial_completo_view(request):
 
 @login_required
 def borrar_historial(request):
-    """Elimina todo el historial de citas del paciente actual."""
     try:
         Cita.objects.filter(paciente=request.user).delete()
         messages.success(request, "Historial eliminado correctamente.")
@@ -123,16 +105,44 @@ def borrar_historial(request):
         messages.error(request, "Error al eliminar historial.")
     return redirect('historial_completo') 
 
+@login_required
+def ver_citas_pendientes(request):
+    hoy = timezone.now().date()
+    citas = Cita.objects.filter(
+        paciente=request.user, 
+        fecha__gte=hoy, 
+        estado='Pendiente'
+    ).order_by('fecha', 'hora')
+    return render(request, 'dashboard/citas_pendientes.html', {'citas': citas})
+
+@login_required
+def ver_asistencia(request):
+    citas = Cita.objects.filter(paciente=request.user).order_by('-fecha')
+    return render(request, 'dashboard/asistencia.html', {'citas': citas})
 
 # 2. VISTAS DE DOCTOR
+
 @login_required
 def doctor_profile_view(request):
     if not hasattr(request.user, 'doctor'):
         return redirect('dashboard')
+    
     doctor = request.user.doctor 
+    hoy = timezone.now().date()
+    citas_pendientes = Cita.objects.filter(
+        doctor=doctor, 
+        estado='Pendiente',
+        fecha__gte=hoy
+    ).order_by('fecha', 'hora')
+
+    # Certificados
     lista_certificados = doctor.certificados.filter(fecha_eliminacion__isnull=True).order_by('-fecha_subida')
-    citas_pendientes = Cita.objects.filter(doctor=doctor, estado='Pendiente').order_by('fecha')
-    context = {'doctor': doctor, 'certificados': lista_certificados, 'citas_pendientes': citas_pendientes}
+    
+    context = {
+        'doctor': doctor, 
+        'certificados': lista_certificados, 
+        'citas_pendientes': citas_pendientes 
+    }
     return render(request, 'dashboard/doctor_profile.html', context)
 
 @login_required
@@ -157,57 +167,61 @@ def historial_citas(request):
     todas_las_citas = Cita.objects.filter(doctor=doctor).order_by('-fecha')
     return render(request, 'dashboard/historial_citas.html', {'todas_las_citas': todas_las_citas})
 
-
 @login_required
 def agendar_cita_doctor(request, doctor_id):
-    
     doctor = get_object_or_404(Doctor, id=doctor_id)
-    
     if request.method == 'POST':
         form = CitaForm(request.POST)
-        
         if form.is_valid():
             cita = form.save(commit=False)
             cita.paciente = request.user 
             cita.doctor = doctor
             cita.especialidad = doctor.especialidad 
             cita.estado = 'Pendiente'
-            
             cita.save()
-            
             messages.success(request, f'Cita agendada con el Dr. {doctor.usuario.last_name}')
             return redirect('dashboard')
-            
         else:
-            
-            print("Errores de validación:", form.errors)
             messages.error(request, "Error al agendar. Revisa la fecha/hora.")
-            
     else:
         form = CitaForm()
-
-    context = {
-        'doctor': doctor,
-        'form': form
-    }
+    context = {'doctor': doctor, 'form': form}
     return render(request, 'dashboard/agendar_directo.html', context)
-@login_required
-def ver_citas_pendientes(request):
-    hoy = timezone.now().date()
-    citas = Cita.objects.filter(
-        paciente=request.user, 
-        fecha__gte=hoy, 
-        estado='Pendiente'
-    ).order_by('fecha', 'hora')
-    
-    return render(request, 'dashboard/citas_pendientes.html', {'citas': citas})
-@login_required
-def ver_asistencia(request):
-    citas = Cita.objects.filter(paciente=request.user).order_by('-fecha')
-    
-    return render(request, 'dashboard/asistencia.html', {'citas': citas})
-# --- GESTIÓN DE CERTIFICADOS (PAPELERA) ---
 
+@login_required
+def agenda_dia_view(request):
+    if not hasattr(request.user, 'doctor'):
+        return redirect('dashboard')
+    
+    doctor = request.user.doctor
+    hoy = timezone.now().date()
+    
+    citas_hoy = Cita.objects.filter(
+        doctor=doctor,
+        fecha=hoy
+    ).order_by('hora')
+    
+    context = {
+        'citas': citas_hoy,
+        'fecha_actual': hoy,
+        'doctor': doctor
+    }
+    return render(request, 'dashboard/agenda_dia.html', context)
+
+@login_required
+def marcar_atendida(request, cita_id):
+    if not hasattr(request.user, 'doctor'):
+        return redirect('dashboard')
+    
+    cita = get_object_or_404(Cita, id=cita_id, doctor=request.user.doctor)
+    
+    cita.estado = 'Atendida'
+    cita.save()
+    
+    messages.success(request, f"Cita con {cita.paciente} finalizada.")
+    return redirect('doctor_profile')
+
+# 3. GESTIÓN DE CERTIFICADOS
 @login_required
 def ver_certificados(request):
     if not hasattr(request.user, 'doctor'):
@@ -243,7 +257,9 @@ def acciones_certificados(request):
                 item.delete()
     return redirect('ver_certificados')
 
-# 3. API / AJAX FUNCTIONS
+
+
+# 4. API / AJAX FUNCTIONS
 @login_required
 def subir_certificado_ajax(request):
     if request.method == 'POST' and request.FILES.get('archivo'):

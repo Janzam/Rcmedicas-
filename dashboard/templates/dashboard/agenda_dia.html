@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda del Día | RCMedica</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/agenda_dia.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">rcmedica <span style="font-weight:300; color:#6b7280;">| Agenda</span></div>
+        <div>
+            {% if doctor.foto %}
+                <img src="{{ doctor.foto.url }}" class="user-avatar" alt="Doctor">
+            {% else %}
+                <div style="width:35px; height:35px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">👨‍⚕️</div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <a href="{% url 'perfil_doctor' %}" class="btn-back">
+            ← Volver al Perfil
+        </a>
+
+        <div class="page-header">
+            <div>
+                <h1 style="font-size: 1.5rem; font-weight: 700;">Agenda del Día</h1>
+                <p style="color: var(--text-gray); font-size: 0.9rem;">Pacientes programados para hoy</p>
+            </div>
+            <div class="date-display">
+                📅 {{ fecha_actual|date:"l, d \d\e F \d\e Y" }}
+            </div>
+        </div>
+
+        <div class="card">
+            {% if citas %}
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">Hora</th>
+                        <th>Paciente</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas %}
+                    <tr>
+                        <td class="time-cell">
+                            {{ cita.hora|time:"H:i" }}
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;">
+                                {{ cita.paciente.first_name }} {{ cita.paciente.last_name }}
+                            </div>
+                            <div class="patient-email">
+                                {{ cita.paciente.email }}
+                            </div>
+                        </td>
+                        <td>
+                            {{ cita.motivo|truncatechars:30 }}
+                        </td>
+                        <td>
+                            {% if cita.estado == 'Pendiente' %}
+                                <span class="badge badge-pendiente">Pendiente</span>
+                            {% elif cita.estado == 'Aceptada' %}
+                                <span class="badge badge-aceptada">Aceptada</span>
+                            {% else %}
+                                <span class="badge badge-finalizada">{{ cita.estado }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align: right;">
+                            {% if cita.estado == 'Pendiente' %}
+                                <button class="btn-action">
+                                    Gestionar
+                                </button>
+                            {% else %}
+                                <span style="font-size: 0.8rem; color: #9ca3af;">—</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <div class="empty-state">
+                    <p style="font-size: 2rem; margin-bottom: 10px;">☕</p>
+                    <p>No tienes citas programadas para el día de hoy.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</body>
+</html>

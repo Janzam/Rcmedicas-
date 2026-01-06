@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Médico | RCMedica</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="{% static 'dashboard/css/doctor_profile.css' %}">
 </head>
 <body>
@@ -18,7 +16,7 @@
             {% if doctor.foto %}
                 <img src="{{ doctor.foto.url }}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
             {% else %}
-                <span>🔔</span>
+                <div style="width:35px; height:35px; border-radius:50%; background:#ffffff33; display:flex; align-items:center; justify-content:center;">🔔</div>
             {% endif %}
         </div>
     </nav>
@@ -30,7 +28,7 @@
                 {% if doctor.foto %}
                     <img src="{{ doctor.foto.url }}" class="profile-img" alt="Doctor">
                 {% else %}
-                    <div style="width:90px; height:90px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; font-size:40px;">👨‍⚕️</div>
+                    <div style="width:90px; height:90px; border-radius:50%; background:#f1f5f9; display:flex; align-items:center; justify-content:center; font-size:40px;">👨‍⚕️</div>
                 {% endif %}
                 
                 <div>
@@ -67,12 +65,10 @@
             </div>
 
             <div id="lista-archivos" class="files-list">
-                {% for cert in certificados|slice:":1" %}
+                {% for cert in certificados|slice:":3" %}
                 <div class="file-row" id="cert-{{ cert.id }}">
                     <img src="{% static 'dashboard/img/image_260117.png' %}" class="pdf-icon-img" alt="PDF">
-                    
                     <span class="file-name">{{ cert.archivo.name|cut:"certificados/" }}</span>
-                    
                     <div class="file-actions">
                         <a href="{{ cert.archivo.url }}" download class="action-btn" title="Descargar">⬇️</a>
                     </div>
@@ -87,63 +83,59 @@
             </div>
         </div>
 
-     <!-- CITAS -->
-<div class="card">
-    <h3 class="section-title">Mis Citas Programadas</h3>
+        <div class="card bottom-section">
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px;">
+                <h3 style="margin: 0; font-family: 'Merriweather', serif; font-size: 1.3rem; font-weight: 600; color: #1a202c;">
+                    Mis Citas Pendientes
+                </h3>
+                
+                <a href="{% url 'agenda_dia' %}" style="text-decoration: none; background-color: #f0f9ff; color: #0084ff; padding: 6px 15px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: 0.2s;">
+                    Ver agenda completa &rarr;
+                </a>
+            </div>
 
-    <table class="citas-table">
-        <thead>
-            <tr>
-                <th>Paciente</th>
-                <th>Hora</th>
-                <th>Motivo</th>
-                <th>
-                    Acciones
-                    <span class="menu-header">⋮</span>
-                </th>
-            </tr>
-        </thead>
+            <table class="citas-table">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Fecha / Hora</th>
+                        <th>Motivo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
 
-        <tbody>
-            {% for cita in mis_citas %}
-            <tr>
-                <td>{{ cita.paciente }}</td>
-                <td>{{ cita.fecha|date:"H:i" }}</td>
-                <td>{{ cita.motivo }}</td>
-                <td class="acciones-cell">
+                <tbody>
+                    {% for cita in citas_pendientes|slice:":4" %}
+                    <tr>
+                        <td>
+                            <strong>{{ cita.paciente.first_name }} {{ cita.paciente.last_name }}</strong>
+                            <div style="font-size: 0.8rem; color: #a0aec0;">{{ cita.paciente.email }}</div>
+                        </td>
+                        <td>
+                            {{ cita.fecha|date:"d M" }} - <span style="color:#2563eb; font-weight:600;">{{ cita.hora|time:"H:i" }}</span>
+                        </td>
+                        <td>{{ cita.motivo|truncatechars:30 }}</td>
+                        <td class="acciones-cell">
+                            <a href="{% url 'marcar_atendida' cita.id %}" class="btn-accept">
+                                ✔ Atender
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">
+                            <div class="empty" style="text-align: center; padding: 30px; color: #a0aec0; font-style: italic; background-color: #f8fafc; border-radius: 8px;">
+                                No tienes citas programadas para hoy.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-                    {% if cita.estado == "Pendiente" %}
-                        <button class="btn-accept">✔ Aceptar</button>
-                    {% endif %}
-
-                    <div class="dropdown">
-                        <button class="dots-btn">⋮</button>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'agenda_dia' %}">📅 Ver agenda</a>
-                            <a href="#">✅ Marcar completada</a>
-                            <a href="#">❌ Cancelar</a>
-                        </div>
-                    </div>
-
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4" class="empty">
-                    No tienes citas programadas para hoy.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="align-right">
-        <a href="{% url 'agenda_dia' %}" class="btn-secondary">
-            Ver agenda completa del día →
-        </a>
     </div>
-</div>
-
 
     <div id="config-data" 
          data-pdf-icon="{% static 'dashboard/img/image_260117.png' %}" 
@@ -154,6 +146,5 @@
     </div>
 
     <script src="{% static 'dashboard/js/doctor_profile.js' %}"></script>
-
 </body>
 </html>
