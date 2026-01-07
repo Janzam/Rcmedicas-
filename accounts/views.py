@@ -17,7 +17,6 @@ def register_patient_view(request):
 
 def register_doctor_view(request):
     if request.method == 'POST':
-        
         form = DoctorRegisterForm(request.POST, request.FILES) 
         if form.is_valid():
             user = form.save()
@@ -28,18 +27,17 @@ def register_doctor_view(request):
     
     return render(request, 'accounts/register.html', {'form': form, 'tipo': 'Doctor'})
 
+
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            
             if hasattr(user, 'doctor'):
                 return redirect('doctor_profile') 
             else:
-                return redirect('dashboard')      
-                
+                return redirect('dashboard')           
     else:
         form = LoginForm()
 

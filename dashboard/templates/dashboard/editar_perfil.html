@@ -5,32 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil | RCMedica</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="{% static 'dashboard/css/editar_perfil.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dashboard/css/editar_perfil_doctor.css' %}">
 </head>
 <body>
 
-    <div class="edit-container">
-        <h2>Editar Información Profesional</h2>
-        
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            {% for field in form %}
-            <div class="form-group">
-                <label>{{ field.label }}</label>
-                {{ field }} 
-                {% if field.errors %}
-                    <small style="color:red;">{{ field.errors|striptags }}</small>
-                {% endif %}
-            </div>
-            {% endfor %}
+    <nav class="navbar">
+        <div class="brand">rcmedica | Agenda</div>
+    </nav>
 
-            <button type="submit" class="btn-save">Guardar Cambios</button>
-            <a href="{% url 'doctor_profile' %}" class="btn-cancel">Cancelar y volver</a>
-        </form>
+    <div class="container">
+        <a href="{% url 'doctor_profile' %}" class="btn-back">← Volver al Perfil</a>
+
+        <div class="card profile-card">
+            <div class="profile-header">
+                <h2>Editar Información Profesional</h2>
+                <p class="subtitle">Actualiza tus datos y configuración de cuenta</p>
+            </div>
+            
+            <form method="POST" enctype="multipart/form-data" class="profile-form">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        <div class="input-wrapper">
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <small class="error-msg">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                        {% if field.help_text %}
+                            <small class="help-text">{{ field.help_text }}</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-actions">
+                    <a href="{% url 'doctor_profile' %}" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-save">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 </body>

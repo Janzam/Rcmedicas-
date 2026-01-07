@@ -7,14 +7,9 @@ class Doctor(models.Model):
     especialidad = models.CharField(max_length=100)
     foto = models.ImageField(upload_to='doctores/', default='doctores/default.jpg')
     horario = models.CharField(max_length=100, default="Lun - Vie: 9am - 5pm")
-    capacidad_diaria = models.IntegerField(default=10)
-    
     descripcion = models.TextField(blank=True, verbose_name="Sobre mí")
-    edad = models.IntegerField(null=True, blank=True)
     telefono = models.CharField(max_length=20, blank=True, verbose_name="Teléfono")
-    cedula = models.CharField(max_length=20, blank=True, verbose_name="Cédula/ID")
-    sitio_web = models.URLField(blank=True)
-    linkedin = models.URLField(blank=True, verbose_name="Perfil de LinkedIn")
+    capacidad_diaria = models.IntegerField(default=20)
 
     def __str__(self):
         return f"Dr. {self.usuario.first_name} {self.usuario.last_name}"
@@ -38,12 +33,11 @@ class Certificado(models.Model):
 
 class Cita(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    paciente = models.CharField(max_length=100)
+    paciente = models.ForeignKey(User, on_delete=models.CASCADE, related_name='citas_como_paciente')
     fecha = models.DateTimeField()
     hora = models.TimeField()  
     motivo = models.CharField(max_length=200)
     estado = models.CharField(max_length=20, default='Pendiente')
-    
 
     def __str__(self):
-        return f"Cita {self.paciente} con {self.doctor}"
+        return f"Cita {self.paciente.first_name} {self.paciente.last_name} con {self.doctor}"

@@ -35,7 +35,6 @@ body {
     margin: 30px auto;
     padding: 0 20px;
     display: grid;
-    /* Columna izquierda fija, derecha flexible */
     grid-template-columns: 350px 1fr; 
     gap: 30px;
     align-items: start;
@@ -50,12 +49,12 @@ body {
 .card {
     background: white;
     padding: 30px;
-    border-radius: 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     border: 1px solid #e1e4e8;
 }
 
-/* CARTA DE ABAJO (Full Width) */
+/* CARTA DE ABAJO  */
 .bottom-section {
     grid-column: 1 / -1; 
     margin-top: 10px;
@@ -125,7 +124,7 @@ body {
     border: 1px solid #cbd5e0;
     background-color: white;
     color: #4a5568;
-    border-radius: 4px;
+    border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
     transition: all 0.2s;
@@ -177,52 +176,70 @@ body {
     font-weight: 600;
 }
 
+/* BOTÓN SUBIR CERTIFICADO */
 .btn-subir-certificado {
-    background-color: #007bff;
+    background-color: #2563eb;
     color: white;
-    padding: 8px 20px;
-    border-radius: 4px;
+    padding: 8px 16px;
+    border-radius: 6px;
     font-size: 0.9rem;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 500;
     display: inline-flex;
     align-items: center;
-    transition: background 0.3s;
-    border: none;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .btn-subir-certificado:hover {
-    background-color: #0069d9;
+    background-color: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-subir-certificado:active {
+    transform: translateY(0);
 }
 
 .files-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0;
     width: 100%;
     margin-bottom: 20px;
+    border: 1px solid #edf2f7;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .file-row {
     display: flex;
     align-items: center;
-    padding: 15px 0;
+    padding: 12px 15px;
     border-bottom: 1px solid #edf2f7;
+    background: white;
     animation: fadeIn 0.3s ease;
 }
 
+.file-row:last-child {
+    border-bottom: none;
+}
+
 .pdf-icon-img {
-    width: 40px;
+    width: 32px;
     height: auto;
-    margin-right: 20px;
+    margin-right: 15px;
     filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.1));
     flex-shrink: 0;
 }
 
 .file-name {
     flex-grow: 1;
-    font-family: 'Merriweather', serif;
-    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
     font-weight: 500;
     color: #2d3748;
     white-space: nowrap;
@@ -231,44 +248,88 @@ body {
     margin-right: 15px;
 }
 
-.view-all-link {
-    display: block;
-    text-align: right;
-    color: #0084ff;
-    text-decoration: none;
-    font-size: 0.85rem;
-    margin-top: 10px;
+/* --- ICONOS Y ACCIONES DE ARCHIVO --- */
+.file-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    background-color: transparent;
     cursor: pointer;
-    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    transform: scale(1.1);
+}
+
+.btn-delete-server:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.view-all-link {
+    display: inline-block;
+    float: right;
+    color: var(--primary-blue);
+    background-color: #f0f9ff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.view-all-link:hover {
+    background-color: var(--primary-blue);
+    color: white;
 }
 
 /* --- TABLA DE CITAS --- */
 .citas-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 5px; /* Reducido un poco porque ahora el header tiene padding */
+    margin-top: 5px; 
 }
 
 .citas-table th {
     text-align: left;
-    background: #f7fafc;
+    background: #f8fafc;
     padding: 15px;
     font-weight: 600;
-    font-family: 'Merriweather', serif;
-    color: #4a5568;
-    border-bottom: 2px solid #e2e8f0;
-    font-size: 0.9rem;
+    font-family: 'Inter', sans-serif;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .citas-table td {
     padding: 15px;
     border-bottom: 1px solid #edf2f7;
-    color: #4a5568;
+    color: #334155;
     font-size: 0.95rem;
     vertical-align: middle;
 }
 
-/* Estado vacío limpio (SIN TAZA) */
 .empty {
     text-align: center;
     padding: 30px;
@@ -304,13 +365,13 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- NUEVO HEADER CITAS (Título izq - Botón der) --- */
+/* --- HEADER CITAS --- */
 .citas-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #f1f5f9;
-    padding-bottom: 12px;
+    padding-bottom: 15px;
     margin-bottom: 10px;
 }
 
@@ -322,18 +383,75 @@ body {
     margin: 0;
 }
 
+/* Botón "Ver agenda completa" */
 .btn-ver-agenda-top {
     color: var(--primary-blue);
     font-size: 0.9rem;
     text-decoration: none;
     font-weight: 600;
     background-color: #f0f9ff;
-    padding: 6px 15px;
+    padding: 8px 16px;
     border-radius: 6px;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
 }
 
 .btn-ver-agenda-top:hover {
     background-color: var(--primary-blue);
     color: white;
+}
+
+/* --- ESTILOS PARA BOTONES AJAX --- */
+.btn-attend {
+    background-color: #3b82f6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: background 0.2s;
+}
+.btn-attend:hover {
+    background-color: #2563eb;
+}
+
+.action-buttons-ajax {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-icon-ajax {
+    border: 1px solid #e2e8f0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: transform 0.2s, background-color 0.2s;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-accept-ajax { 
+    color: #166534; 
+}
+.btn-accept-ajax:hover {
+    background-color: #f0fdf4; 
+    border-color: #bbf7d0;
+}
+
+.btn-reject-ajax { 
+    color: #991b1b; 
+}
+.btn-reject-ajax:hover {
+    background-color: #fef2f2; 
+    border-color: #fecaca; 
+}
+
+.btn-icon-ajax:hover { 
+    transform: scale(1.1); 
 }

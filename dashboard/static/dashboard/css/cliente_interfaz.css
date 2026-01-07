@@ -217,7 +217,7 @@ a {
     justify-content: center;
     align-items: center;
 
-    /* TAMAÑO DE NÚMEROS (Grandes) */
+    /* TAMAÑO DE NÚMEROS  */
     font-size: 1.15rem; 
     font-weight: 500;
     
@@ -245,7 +245,7 @@ a {
     cursor: default;
 }
 
-/* Botón "Nueva Cita" pequeño y a la derecha */
+/* Botón "Nueva Cita" */
 .btn-primary {
     background: var(--primary-blue);
     color: white;
@@ -339,7 +339,7 @@ a {
     border-bottom: none;
 }
 
-/* --- BADGES (Etiquetas de estado) --- */
+/* --- BADGES  --- */
 .badge {
     padding: 4px 10px;
     border-radius: 20px;
@@ -362,7 +362,7 @@ a {
     color: #EF4444;       
 }
 
-/* --- MENSAJES DE ESTADO VACÍO (NO HAY CITAS) --- */
+/* --- MENSAJES DE ESTADO VACÍO --- */
 .empty-msg {
     color: #9CA3AF;
     font-size: 0.9rem;
@@ -413,7 +413,6 @@ a {
     }
 }
 
-
 .calendar-footer-msg {
     float: left;           
     margin-top: 12px;       
@@ -423,7 +422,6 @@ a {
     max-width: 55%;       
     line-height: 1.4;
 }
-
 
 @media (max-width: 480px) {
     .calendar-footer-msg {

@@ -8,7 +8,10 @@ from django.contrib import messages
 from .models import Doctor, Cita, Certificado 
 from .forms import DoctorUpdateForm, CitaForm
 
-# 1. VISTAS DE PACIENTE / GENERAL
+# --- FUNCIÓN AUXILIAR PARA OBTENER LA FECHA REAL ---
+def obtener_fecha_local():
+   return timezone.localtime(timezone.now()).date()
+
 @login_required
 def dashboard_view(request):
     citas_historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')
@@ -19,11 +22,10 @@ def dashboard_view(request):
         if cita.doctor.id not in ids_vistos and len(doctores_recientes) < 3:
             doctores_recientes.append(cita.doctor)
             ids_vistos.add(cita.doctor.id)
-    
-    hoy = timezone.now().date()
+    hoy = obtener_fecha_local()
     
     try:
-        historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')[:5]
+        historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')[:3]
         citas_pendientes = Cita.objects.filter(paciente=request.user, estado='Pendiente').count()
         historial_total = Cita.objects.filter(paciente=request.user).count()
         
@@ -107,7 +109,8 @@ def borrar_historial(request):
 
 @login_required
 def ver_citas_pendientes(request):
-    hoy = timezone.now().date()
+    hoy = obtener_fecha_local()
+    
     citas = Cita.objects.filter(
         paciente=request.user, 
         fecha__gte=hoy, 
@@ -120,23 +123,25 @@ def ver_asistencia(request):
     citas = Cita.objects.filter(paciente=request.user).order_by('-fecha')
     return render(request, 'dashboard/asistencia.html', {'citas': citas})
 
-# 2. VISTAS DE DOCTOR
-
 @login_required
 def doctor_profile_view(request):
     if not hasattr(request.user, 'doctor'):
         return redirect('dashboard')
     
     doctor = request.user.doctor 
-    hoy = timezone.now().date()
+    hoy = obtener_fecha_local()
+    
+    print(f"DEBUG PROFILE: Buscando citas para el doctor {doctor} desde la fecha {hoy}")
+
     citas_pendientes = Cita.objects.filter(
         doctor=doctor, 
         estado='Pendiente',
         fecha__gte=hoy
-    ).order_by('fecha', 'hora')
+    ).order_by('fecha', 'hora')[:3]
 
-    # Certificados
-    lista_certificados = doctor.certificados.filter(fecha_eliminacion__isnull=True).order_by('-fecha_subida')
+    lista_certificados = doctor.certificados.filter(
+        fecha_eliminacion__isnull=True
+    ).order_by('-fecha_subida')[:1] 
     
     context = {
         'doctor': doctor, 
@@ -194,11 +199,12 @@ def agenda_dia_view(request):
         return redirect('dashboard')
     
     doctor = request.user.doctor
-    hoy = timezone.now().date()
+    hoy = obtener_fecha_local()
     
+    print(f"DEBUG AGENDA: Hoy es {hoy}. Buscando citas...")
     citas_hoy = Cita.objects.filter(
         doctor=doctor,
-        fecha=hoy
+        fecha=hoy 
     ).order_by('hora')
     
     context = {
@@ -221,7 +227,6 @@ def marcar_atendida(request, cita_id):
     messages.success(request, f"Cita con {cita.paciente} finalizada.")
     return redirect('doctor_profile')
 
-# 3. GESTIÓN DE CERTIFICADOS
 @login_required
 def ver_certificados(request):
     if not hasattr(request.user, 'doctor'):
@@ -242,24 +247,29 @@ def acciones_certificados(request):
     if request.method == 'POST':
         if not hasattr(request.user, 'doctor'):
             return redirect('dashboard')
+            
         accion = request.POST.get('accion')
         ids = request.POST.getlist('certificados_ids')
+        
         certificados = Certificado.objects.filter(id__in=ids, doctor=request.user.doctor)
         
         if accion == 'papelera':
             certificados.update(fecha_eliminacion=timezone.now())
+            messages.success(request, "Archivos movidos a la papelera.")
+            
         elif accion == 'restaurar':
             certificados.update(fecha_eliminacion=None)
-        elif accion == 'vaciar_papelera':
-            items_papelera = Certificado.objects.filter(doctor=request.user.doctor, fecha_eliminacion__isnull=False)
-            for item in items_papelera:
-                item.archivo.delete()
-                item.delete()
+            messages.success(request, "Archivos restaurados.")
+            
+        elif accion == 'eliminar_definitivamente':
+            count = certificados.count()
+            for cert in certificados:
+                cert.archivo.delete()
+                cert.delete()
+            messages.success(request, f"{count} archivos eliminados permanentemente.")
+            
     return redirect('ver_certificados')
 
-
-
-# 4. API / AJAX FUNCTIONS
 @login_required
 def subir_certificado_ajax(request):
     if request.method == 'POST' and request.FILES.get('archivo'):
@@ -296,9 +306,11 @@ def gestionar_cita_ajax(request):
     try:
         if not hasattr(request.user, 'doctor'):
              return JsonResponse({'status': 'error', 'message': 'No autorizado'})
+        
         cita_id = request.POST.get('cita_id')
         accion = request.POST.get('accion') 
         cita = get_object_or_404(Cita, id=cita_id, doctor=request.user.doctor)
+        
         if accion == 'aceptar':
             cita.estado = 'Aceptada' 
             cita.save()
@@ -307,6 +319,7 @@ def gestionar_cita_ajax(request):
             cita.save()
         elif accion == 'eliminar':
             cita.delete() 
+            
         return JsonResponse({'status': 'success'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})

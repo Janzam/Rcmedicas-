@@ -1,40 +1,70 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('input-archivo');
-    const lista = document.getElementById('lista-archivos');
-    const toggleContainer = document.getElementById('toggle-container');
-    const btnVerTodos = document.getElementById('btn-ver-todos');
-    const config = document.getElementById('config-data');
+    console.log("✅ Sistema de Perfil Médico Vinculado");
 
+    const config = document.getElementById('config-data');
     if (!config) return;
 
+    const listaCertificados = document.getElementById('lista-archivos');
+    const inputArchivo = document.getElementById('input-archivo');
 
-    if(btnVerTodos) {
-        btnVerTodos.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (lista.classList.contains('expanded')) {
-                lista.classList.remove('expanded');
-                this.innerText = `Ver todos mis certificados (${lista.children.length})`;
+    // --- 1. GESTIÓN DE CITAS (ACEPTAR / RECHAZAR) ---
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.btn-gestionar');
+        if (!btn) return;
+
+        e.preventDefault();
+        const { id, accion } = btn.dataset;
+
+        if (!confirm(`¿Deseas ${accion} esta cita?`)) return;
+
+        const formData = new FormData();
+        formData.append('cita_id', id); 
+        formData.append('accion', accion); 
+
+        try {
+            const response = await fetch(config.dataset.urlCita, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': config.dataset.csrf },
+                body: formData
+            });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                const fila = document.getElementById(`fila-cita-${id}`);
+                if (fila) {
+                    // Animación de salida y eliminación
+                    fila.style.transition = 'all 0.4s ease';
+                    fila.style.opacity = '0';
+                    fila.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        fila.remove();
+                        // Si era la última fila, mostrar mensaje de "No hay citas"
+                        const tbody = document.querySelector('.citas-table tbody');
+                        if (tbody && tbody.querySelectorAll('tr').length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="4"><div class="empty">No tienes citas pendientes por ahora.</div></td></tr>';
+                        }
+                    }, 400);
+                }
             } else {
-                lista.classList.add('expanded');
-                this.innerText = "Ver menos";
+                alert("Error: " + data.message);
             }
-        });
-    }
+        } catch (error) {
+            console.error("Error AJAX:", error);
+            alert("Error de conexión al procesar la cita.");
+        }
+    });
 
-    
-    if(input){
-        input.addEventListener('change', async (e) => {
+    // --- 2. GESTIÓN DE CERTIFICADOS (SUBIDA) ---
+    if (inputArchivo) {
+        inputArchivo.addEventListener('change', async (e) => {
             const file = e.target.files[0];
-            if(!file) return;
-
-            const tempMsg = document.createElement('div');
-            tempMsg.innerText = "Subiendo...";
-            tempMsg.style.color = "#007bff";
-            tempMsg.style.padding = "15px 0";
-            lista.prepend(tempMsg);
+            if (!file) return;
 
             const formData = new FormData();
             formData.append('archivo', file);
+
+            // Estado visual de carga
+            listaCertificados.innerHTML = '<p style="padding:10px; color:#3b82f6;">📤 Subiendo...</p>';
 
             try {
                 const response = await fetch(config.dataset.urlSubir, {
@@ -43,50 +73,35 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: formData
                 });
                 const data = await response.json();
-                tempMsg.remove();
 
-                if(data.status === 'success') {
-                    agregarFilaAlPrincipio(data.name, data.url, data.id);
-                } else {
-                    alert('Error: ' + data.message);
+                if (data.status === 'success') {
+                    listaCertificados.innerHTML = `
+                        <div class="file-row" id="cert-${data.id}">
+                            <img src="${config.dataset.pdfIcon}" class="pdf-icon-img" alt="PDF">
+                            <span class="file-name">${data.name}</span>
+                            <div class="file-actions">
+                                <button type="button" class="action-btn btn-delete-ajax" data-id="${data.id}">🗑️</button>
+                                <a href="${data.url}" download class="action-btn">⬇️</a>
+                            </div>
+                        </div>`;
                 }
             } catch (error) {
-                tempMsg.remove();
-                console.error(error);
+                alert("Error al subir archivo");
+                location.reload();
             }
-            input.value = '';
         });
     }
 
-    
-    function agregarFilaAlPrincipio(nombre, urlDescarga, certId) {
-        const row = document.createElement('div');
-        row.className = 'file-row';
-        row.id = `cert-${certId}`;
-        
-        row.innerHTML = `
-            <img src="${config.dataset.pdfIcon}" class="pdf-icon-img" alt="PDF">
-            <span class="file-name">${nombre}</span> 
-            <div class="file-actions">
-                <button type="button" class="action-btn btn-delete-ajax" data-id="${certId}">🗑️</button>
-                <a href="${urlDescarga}" download class="action-btn">⬇️</a>
-            </div>
-        `;
+    // --- 3. GESTIÓN DE CERTIFICADOS ---
+    document.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.btn-delete-ajax, .btn-delete-server');
+        if (!btn) return;
 
-        row.querySelector('.btn-delete-ajax').addEventListener('click', () => borrarArchivo(certId, row));
-        lista.prepend(row); 
+        const id = btn.dataset.id;
+        if (!confirm("¿Eliminar este certificado?")) return;
 
-        const total = lista.children.length;
-        if(btnVerTodos) btnVerTodos.innerText = `Ver todos mis certificados (${total})`;
-        if(total > 3) toggleContainer.style.display = 'block';
-    }
-
-  
-    async function borrarArchivo(id, elementoDOM) {
-        if(!confirm('¿Eliminar certificado?')) return;
-        
         const formData = new FormData();
-        formData.append('cert_id', id);
+        formData.append('cert_id', id); 
 
         try {
             const response = await fetch(config.dataset.urlBorrar, {
@@ -96,24 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const data = await response.json();
 
-            if(data.status === 'success') {
-                elementoDOM.remove();
-                const total = lista.children.length;
-                if(btnVerTodos) btnVerTodos.innerText = `Ver todos mis certificados (${total})`;
-                if(total <= 3) {
-                    toggleContainer.style.display = 'none';
-                    lista.classList.remove('expanded');
+            if (data.status === 'success') {
+                document.getElementById(`cert-${id}`)?.remove();
+                if (listaCertificados.children.length === 0) {
+                    listaCertificados.innerHTML = '<p style="color:#a0aec0; padding:10px;">No has subido certificados recientes.</p>';
                 }
-            } else { alert('Error al borrar'); }
-        } catch (error) { console.error(error); }
-    }
-
-    
-    document.querySelectorAll('.btn-delete-server').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const id = this.dataset.id;
-            const row = document.getElementById(`cert-${id}`);
-            borrarArchivo(id, row);
-        });
+            }
+        } catch (error) {
+            alert("Error al eliminar.");
+        }
     });
 });

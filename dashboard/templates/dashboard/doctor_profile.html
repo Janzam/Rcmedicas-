@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil Médico | RCMedica</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'dashboard/css/doctor_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/doctor_perfil.css' %}">
 </head>
 <body>
 
@@ -65,12 +65,13 @@
             </div>
 
             <div id="lista-archivos" class="files-list">
-                {% for cert in certificados|slice:":3" %}
+                {% for cert in certificados|slice:":1" %}
                 <div class="file-row" id="cert-{{ cert.id }}">
                     <img src="{% static 'dashboard/img/image_260117.png' %}" class="pdf-icon-img" alt="PDF">
                     <span class="file-name">{{ cert.archivo.name|cut:"certificados/" }}</span>
                     <div class="file-actions">
-                        <a href="{{ cert.archivo.url }}" download class="action-btn" title="Descargar">⬇️</a>
+                        <button type="button" class="action-btn btn-delete-server" style="background:none; border:none; cursor:pointer;" data-id="{{ cert.id }}">🗑️</button>
+                        <a href="{{ cert.archivo.url }}" download class="action-btn" style="text-decoration:none;" title="Descargar">⬇️</a>
                     </div>
                 </div>
                 {% empty %}
@@ -85,12 +86,9 @@
 
         <div class="card bottom-section">
             
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 15px;">
-                <h3 style="margin: 0; font-family: 'Merriweather', serif; font-size: 1.3rem; font-weight: 600; color: #1a202c;">
-                    Mis Citas Pendientes
-                </h3>
-                
-                <a href="{% url 'agenda_dia' %}" style="text-decoration: none; background-color: #f0f9ff; color: #0084ff; padding: 6px 15px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; transition: 0.2s;">
+            <div class="citas-header">
+                <h3 class="title-simple">Mis Citas Pendientes</h3>
+                <a href="{% url 'agenda_dia' %}" class="btn-ver-agenda-top">
                     Ver agenda completa &rarr;
                 </a>
             </div>
@@ -101,32 +99,42 @@
                         <th>Paciente</th>
                         <th>Fecha / Hora</th>
                         <th>Motivo</th>
-                        <th>Acciones</th>
+                        <th style="text-align: right;">Acciones</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     {% for cita in citas_pendientes|slice:":4" %}
-                    <tr>
+                    <tr id="fila-cita-{{ cita.id }}">
                         <td>
                             <strong>{{ cita.paciente.first_name }} {{ cita.paciente.last_name }}</strong>
                             <div style="font-size: 0.8rem; color: #a0aec0;">{{ cita.paciente.email }}</div>
                         </td>
                         <td>
-                            {{ cita.fecha|date:"d M" }} - <span style="color:#2563eb; font-weight:600;">{{ cita.hora|time:"H:i" }}</span>
+                            {{ cita.fecha|date:"d M" }} - <span style="color:#0084ff; font-weight:600;">{{ cita.hora|time:"H:i" }}</span>
                         </td>
                         <td>{{ cita.motivo|truncatechars:30 }}</td>
-                        <td class="acciones-cell">
-                            <a href="{% url 'marcar_atendida' cita.id %}" class="btn-accept">
-                                ✔ Atender
-                            </a>
+                        <td class="acciones-cell" style="text-align: right;">
+                            
+                            <div class="action-buttons-ajax" id="acciones-{{ cita.id }}">
+                                <button class="btn-icon-ajax btn-accept-ajax btn-gestionar" 
+                                        data-id="{{ cita.id }}" 
+                                        data-accion="aceptar" 
+                                        title="Aceptar">✔</button>
+                                
+                                <button class="btn-icon-ajax btn-reject-ajax btn-gestionar" 
+                                        data-id="{{ cita.id }}" 
+                                        data-accion="rechazar" 
+                                        title="Rechazar">✖</button>
+                            </div>
+
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
                         <td colspan="4">
-                            <div class="empty" style="text-align: center; padding: 30px; color: #a0aec0; font-style: italic; background-color: #f8fafc; border-radius: 8px;">
-                                No tienes citas programadas para hoy.
+                            <div class="empty">
+                                No tienes citas pendientes por ahora.
                             </div>
                         </td>
                     </tr>
@@ -138,11 +146,12 @@
     </div>
 
     <div id="config-data" 
+         style="display:none;"
+         data-csrf="{{ csrf_token }}"
          data-pdf-icon="{% static 'dashboard/img/image_260117.png' %}" 
          data-url-subir="{% url 'subir_certificado_ajax' %}"
          data-url-borrar="{% url 'borrar_certificado_ajax' %}"
-         data-csrf="{{ csrf_token }}"
-         style="display:none;">
+         data-url-cita="{% url 'gestionar_cita_ajax' %}">
     </div>
 
     <script src="{% static 'dashboard/js/doctor_profile.js' %}"></script>

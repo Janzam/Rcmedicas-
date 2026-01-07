@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Certificados</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'dashboard/css/ver_certificados.css' %}">
+    <link rel="stylesheet" href="{% static 'dashboard/css/certificado.css' %}">
 </head>
 <body>
 
@@ -50,7 +50,7 @@
                 <h2>🗑️ Papelera (30 días)</h2>
                 <div class="controls">
                     <button type="submit" name="accion" value="restaurar" class="btn-restore">Restaurar Selección</button>
-                    <button type="submit" name="accion" value="vaciar_papelera" class="btn-empty" onclick="return confirm('¿Seguro que quieres borrar todo permanentemente?');">Vaciar Papelera</button>
+                    <button type="submit" name="accion" value="eliminar_definitivamente" class="btn-empty" onclick="return confirm('¿Estás seguro de eliminar los archivos seleccionados permanentemente?');">Eliminar Seleccionados</button>
                 </div>
             </div>
             
