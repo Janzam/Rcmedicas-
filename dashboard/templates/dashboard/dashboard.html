@@ -17,9 +17,34 @@
             <i class="fas fa-plus-circle"></i> CareConnect
         </div>
         <div class="user-menu">
-            <i class="far fa-bell"></i>
-            <div class="avatar-container">
-                <img src="https://ui-avatars.com/api/?name={{ user.username|default:'Usuario' }}&background=E91E63&color=fff" alt="Perfil" class="avatar">
+            <div class="notif-bell">
+                <i class="far fa-bell"></i>
+                {% if notificaciones %}
+                    <div class="notif-dot"></div>
+                    <div class="notif-dropdown">
+                        {% for n in notificaciones %}
+                            <div class="notif-item">
+                                <span class="notif-text">{{ n.mensaje }}</span>
+                                <span class="notif-time">{{ n.fecha|date:"d M, H:i" }}</span>
+                            </div>
+                        {% empty %}
+                            <div class="notif-item empty">No tienes notificaciones nuevas.</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="nav-profile">
+                <div class="avatar-container">
+                    <img src="https://ui-avatars.com/api/?name={{ user.username|default:'Usuario' }}&background=E91E63&color=fff" alt="Perfil" class="avatar">
+                </div>
+                
+                <div class="nav-dropdown">
+                    <form action="{% url 'logout' %}" method="post" style="display: none;" id="logout-form">
+                        {% csrf_token %}
+                    </form>
+                    <a href="#" onclick="document.getElementById('logout-form').submit();">Cerrar Sesión</a>
+                </div>
             </div>
         </div>
     </header>
@@ -166,6 +191,11 @@
 
     </main>
 
+    <div id="config-data" 
+         data-url-marcar-notifs="{% url 'marcar_notificaciones_leidas' %}"
+         data-csrf="{{ csrf_token }}"
+         style="display:none;">
+    </div>
     <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
 
 </body>

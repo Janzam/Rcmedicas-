@@ -14,12 +14,39 @@
 
     <nav class="navbar">
         <div class="brand" style="font-size:1.1rem;">rcmedica | <span style="font-weight:300;">Portal medico</span></div>
-        <div>
-            {% if doctor.foto %}
-                <img src="{{ doctor.foto.url }}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
-            {% else %}
+        <div style="display: flex; align-items: center;">
+            <div class="notif-bell">
                 <span>🔔</span>
-            {% endif %}
+                {% if notificaciones %}
+                    <div class="notif-dot"></div>
+                    <div class="notif-dropdown">
+                        {% for n in notificaciones %}
+                            <div class="notif-item">
+                                <span class="notif-text">{{ n.mensaje }}</span>
+                                <span class="notif-time">{{ n.fecha|date:"d M, H:i" }}</span>
+                            </div>
+                        {% empty %}
+                            <div class="notif-item empty">No tienes notificaciones nuevas.</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="nav-profile">
+                {% if doctor.foto %}
+                    <img src="{{ doctor.foto.url }}" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                {% else %}
+                    <img src="https://ui-avatars.com/api/?name={{ user.last_name }}&background=0084ff&color=fff" style="width:35px; height:35px; border-radius:50%; object-fit:cover;">
+                {% endif %}
+                
+                <div class="nav-dropdown">
+                    <a href="{% url 'editar_perfil_doctor' %}">Configuración</a>
+                    <form action="{% url 'logout' %}" method="post" style="display: none;" id="logout-form">
+                        {% csrf_token %}
+                    </form>
+                    <a href="#" onclick="document.getElementById('logout-form').submit();">Cerrar Sesión</a>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -88,59 +115,68 @@
         </div>
 
      <!-- CITAS -->
-<div class="card">
-    <h3 class="section-title">Mis Citas Programadas</h3>
+<div class="bottom-section">
+    <div class="card">
+        <h3 class="section-title">Mis Citas Programadas</h3>
 
-    <table class="citas-table">
-        <thead>
-            <tr>
-                <th>Paciente</th>
-                <th>Hora</th>
-                <th>Motivo</th>
-                <th>
-                    Acciones
-                    <span class="menu-header">⋮</span>
-                </th>
-            </tr>
-        </thead>
+        <table class="citas-table">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Hora</th>
+                    <th>Motivo</th>
+                    <th>
+                        Acciones
+                        <span class="menu-header">⋮</span>
+                    </th>
+                </tr>
+            </thead>
 
-        <tbody>
-            {% for cita in mis_citas %}
-            <tr>
-                <td>{{ cita.paciente }}</td>
-                <td>{{ cita.fecha|date:"H:i" }}</td>
-                <td>{{ cita.motivo }}</td>
-                <td class="acciones-cell">
+            <tbody>
+                {% for cita in citas_hoy|slice:":3" %}
+                <tr class="status-{{ cita.estado|lower }}">
+                    <td>{{ cita.paciente.get_full_name|default:cita.paciente.username }}</td>
+                    <td>{{ cita.hora|time:"H:i" }}</td>
+                    <td>{{ cita.motivo }}</td>
+                    <td class="acciones-cell">
 
-                    {% if cita.estado == "Pendiente" %}
-                        <button class="btn-accept">✔ Aceptar</button>
-                    {% endif %}
+                        {% if cita.estado == "Pendiente" %}
+                            <button class="btn-action btn-accept btn-accept-appointment" data-id="{{ cita.id }}" title="Aceptar Cita">
+                                <i class="fas fa-check"></i> Aceptar
+                            </button>
+                            <button class="btn-action btn-reject btn-manage-appointment" data-id="{{ cita.id }}" data-action="rechazar" title="Rechazar Cita">
+                                <i class="fas fa-user-times"></i>
+                            </button>
+                        {% elif cita.estado == "Aceptada" %}
+                            <span class="badge badge-accepted">Aceptada</span>
+                        {% endif %}
 
-                    <div class="dropdown">
-                        <button class="dots-btn">⋮</button>
-                        <div class="dropdown-menu">
-                            <a href="{% url 'agenda_dia' %}">📅 Ver agenda</a>
-                            <a href="#">✅ Marcar completada</a>
-                            <a href="#">❌ Cancelar</a>
+                        <div class="dropdown actions-dropdown">
+                            <button class="dots-btn">⋮</button>
+                            <div class="dropdown-menu">
+                                <a href="{% url 'agenda_dia' %}"><i class="far fa-calendar-alt"></i> Ver agenda</a>
+                                <a href="#" class="btn-manage-appointment" data-id="{{ cita.id }}" data-action="completar"><i class="fas fa-check-circle"></i> Marcar completada</a>
+                                <a href="#" class="btn-manage-appointment" data-id="{{ cita.id }}" data-action="cancelar"><i class="fas fa-times-circle"></i> Cancelar</a>
+                            </div>
                         </div>
-                    </div>
 
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4" class="empty">
-                    No tienes citas programadas para hoy.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="empty">
+                        No tienes citas programadas para hoy.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <div class="align-right">
-        <a href="{% url 'agenda_dia' %}" class="btn-secondary">
-            Ver agenda completa del día →
-        </a>
+        <div class="align-right">
+            <a href="{% url 'agenda_dia' %}" class="btn-secondary">
+                Ver agenda completa del día →
+            </a>
+        </div>
     </div>
 </div>
 
@@ -149,6 +185,8 @@
          data-pdf-icon="{% static 'dashboard/img/image_260117.png' %}" 
          data-url-subir="{% url 'subir_certificado_ajax' %}"
          data-url-borrar="{% url 'borrar_certificado_ajax' %}"
+         data-url-cita="{% url 'gestionar_cita_ajax' %}"
+         data-url-marcar-notifs="{% url 'marcar_notificaciones_leidas' %}"
          data-csrf="{{ csrf_token }}"
          style="display:none;">
     </div>

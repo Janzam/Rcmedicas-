@@ -5,13 +5,16 @@ from django.http import JsonResponse
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages 
-from .models import Doctor, Cita, Certificado 
+from .models import Doctor, Cita, Certificado, Notificacion 
 from .forms import DoctorUpdateForm, CitaForm
+from django.contrib.auth.models import User
 
 
 # 1. VISTAS DE PACIENTE / USUARIO GENERAL
 @login_required
 def dashboard_view(request):
+    if hasattr(request.user, 'doctor'):
+        return redirect('doctor_profile')
     
     citas_historial = Cita.objects.filter(paciente=request.user).order_by('-fecha')
     
@@ -52,7 +55,8 @@ def dashboard_view(request):
         'historial_rapido': historial,
         'citas_pendientes': citas_pendientes,
         'historial_total': historial_total,
-        'proxima_cita': proxima_cita
+        'proxima_cita': proxima_cita,
+        'notificaciones': request.user.notificaciones.filter(leida=False, perfil='paciente').order_by('-fecha')
     }
     
     return render(request, 'dashboard/dashboard.html', context)
@@ -66,6 +70,12 @@ def crear_cita_view(request):
             cita.paciente = request.user 
             cita.estado = 'Pendiente'
             cita.save()
+            # Notif al paciente
+            Notificacion.objects.create(usuario=request.user, mensaje=f"Has agendado una cita con el Dr. {cita.doctor.usuario.last_name}", perfil='paciente')
+            # Notif al doctor
+            nombre_u = request.user.get_full_name() or request.user.username
+            Notificacion.objects.create(usuario=cita.doctor.usuario, mensaje=f"Tiene una cita pendiente de aceptar {nombre_u}", perfil='doctor')
+            
             messages.success(request, '¡Tu cita ha sido agendada exitosamente!')
             return redirect('dashboard') 
         else:
@@ -131,8 +141,17 @@ def doctor_profile_view(request):
         return redirect('dashboard')
     doctor = request.user.doctor 
     lista_certificados = doctor.certificados.filter(fecha_eliminacion__isnull=True).order_by('-fecha_subida')
-    citas_pendientes = Cita.objects.filter(doctor=doctor, estado='Pendiente').order_by('fecha')
-    context = {'doctor': doctor, 'certificados': lista_certificados, 'citas_pendientes': citas_pendientes}
+    citas_hoy = Cita.objects.filter(
+        doctor=doctor, 
+        estado__in=['Pendiente', 'Aceptada']
+    ).order_by('fecha', 'hora')
+    notifs = request.user.notificaciones.filter(leida=False, perfil='doctor').order_by('-fecha')
+    context = {
+        'doctor': doctor, 
+        'certificados': lista_certificados, 
+        'citas_hoy': citas_hoy, 
+        'notificaciones': notifs
+    }
     return render(request, 'dashboard/doctor_profile.html', context)
 
 @login_required
@@ -157,6 +176,15 @@ def historial_citas(request):
     todas_las_citas = Cita.objects.filter(doctor=doctor).order_by('-fecha')
     return render(request, 'dashboard/historial_citas.html', {'todas_las_citas': todas_las_citas})
 
+@login_required
+def agenda_dia_view(request):
+    if not hasattr(request.user, 'doctor'):
+        return redirect('dashboard')
+    doctor = request.user.doctor
+    hoy = timezone.now().date()
+    citas_hoy = Cita.objects.filter(doctor=doctor, fecha__date=hoy).order_by('hora')
+    return render(request, 'dashboard/agenda_dia.html', {'citas_hoy': citas_hoy, 'hoy': hoy})
+
 
 @login_required
 def agendar_cita_doctor(request, doctor_id):
@@ -174,6 +202,10 @@ def agendar_cita_doctor(request, doctor_id):
             cita.estado = 'Pendiente'
             
             cita.save()
+            
+            # Notif al doctor
+            nombre_u = request.user.get_full_name() or request.user.username
+            Notificacion.objects.create(usuario=doctor.usuario, mensaje=f"Tiene una cita pendiente de aceptar {nombre_u}", perfil='doctor')
             
             messages.success(request, f'Cita agendada con el Dr. {doctor.usuario.last_name}')
             return redirect('dashboard')
@@ -276,6 +308,12 @@ def borrar_certificado_ajax(request):
 
 @login_required
 @require_POST
+def marcar_notificaciones_leidas(request):
+    request.user.notificaciones.filter(leida=False).update(leida=True)
+    return JsonResponse({'status': 'success'})
+
+@login_required
+@require_POST
 def gestionar_cita_ajax(request):
     try:
         if not hasattr(request.user, 'doctor'):
@@ -286,9 +324,16 @@ def gestionar_cita_ajax(request):
         if accion == 'aceptar':
             cita.estado = 'Aceptada' 
             cita.save()
-        elif accion == 'rechazar':
-            cita.estado = 'Rechazada'
+            Notificacion.objects.create(usuario=cita.paciente, mensaje=f"El Dr. {request.user.last_name} ha aceptado tu cita para el {cita.fecha.strftime('%d/%m')}", perfil='paciente')
+        elif accion == 'rechazar' or accion == 'cancelar':
+            cita.estado = 'Cancelado'
             cita.save()
+            msg = "ha rechazado" if accion == 'rechazar' else "ha cancelado"
+            Notificacion.objects.create(usuario=cita.paciente, mensaje=f"El Dr. {request.user.last_name} {msg} tu cita.", perfil='paciente')
+        elif accion == 'completar':
+            cita.estado = 'Completada'
+            cita.save()
+            Notificacion.objects.create(usuario=cita.paciente, mensaje=f"Tu cita con el Dr. {request.user.last_name} ha sido marcada como completada.", perfil='paciente')
         elif accion == 'eliminar':
             cita.delete() 
         return JsonResponse({'status': 'success'})

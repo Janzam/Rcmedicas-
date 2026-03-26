@@ -8,6 +8,10 @@ class RegisterForm(forms.ModelForm):
         'class': 'form-input', 
         'placeholder': 'Username'
     }))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-input', 
+        'placeholder': 'First name'
+    }))
     last_name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-input', 
         'placeholder': 'Last name'
@@ -23,7 +27,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'last_name', 'email', 'password']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
     def save(self, commit=True):
         user = super().save(commit=False)

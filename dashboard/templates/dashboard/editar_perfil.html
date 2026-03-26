@@ -7,29 +7,35 @@
     <title>Editar Perfil | RCMedica</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{% static 'dashboard/css/editar_perfil.css' %}">
 </head>
 <body>
 
     <div class="edit-container">
-        <h2>Editar Información Profesional</h2>
+        <div class="header">
+            <a href="{% url 'doctor_profile' %}" class="back-link"><i class="fas fa-arrow-left"></i> Volver</a>
+            <h2>Editar Información Profesional</h2>
+        </div>
         
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" class="edit-form">
             {% csrf_token %}
             
-            {% for field in form %}
-            <div class="form-group">
-                <label>{{ field.label }}</label>
-                {{ field }} 
-                {% if field.errors %}
-                    <small style="color:red;">{{ field.errors|striptags }}</small>
-                {% endif %}
+            <div class="form-grid">
+                {% for field in form %}
+                    <div class="form-group {% if field.name == 'sobre_mi' or field.name == 'foto' %}full-width{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small class="error-msg">{{ field.errors|striptags }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
 
-            <button type="submit" class="btn-save">Guardar Cambios</button>
-            <a href="{% url 'doctor_profile' %}" class="btn-cancel">Cancelar y volver</a>
+            <div class="actions">
+                <button type="submit" class="btn-save"><i class="fas fa-save"></i> Guardar Cambios</button>
+            </div>
         </form>
     </div>
 

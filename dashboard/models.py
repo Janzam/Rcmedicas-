@@ -38,7 +38,7 @@ class Certificado(models.Model):
 
 class Cita(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    paciente = models.CharField(max_length=100)
+    paciente = models.ForeignKey(User, on_delete=models.CASCADE, related_name='citas_paciente')
     fecha = models.DateTimeField()
     hora = models.TimeField()  
     motivo = models.CharField(max_length=200)
@@ -47,3 +47,17 @@ class Cita(models.Model):
 
     def __str__(self):
         return f"Cita {self.paciente} con {self.doctor}"
+
+class Notificacion(models.Model):
+    PERFILES = (
+        ('paciente', 'Paciente'),
+        ('doctor', 'Doctor'),
+    )
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notificaciones')
+    mensaje = models.CharField(max_length=255)
+    leida = models.BooleanField(default=False)
+    fecha = models.DateTimeField(auto_now_add=True)
+    perfil = models.CharField(max_length=10, choices=PERFILES, default='paciente')
+
+    def __str__(self):
+        return f"[{self.perfil}] to {self.usuario.username}: {self.mensaje[:20]}"

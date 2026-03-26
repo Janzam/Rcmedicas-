@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda del Día - RCMedicas</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{% static 'dashboard/css/asistencia.css' %}">
+</head>
+<body>
+
+    <div class="attendance-container">
+        
+        <div class="page-header">
+            <h1 class="page-title">Agenda para hoy: {{ hoy|date:"d M, Y" }}</h1>
+            <a href="{% url 'doctor_profile' %}" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Volver al Perfil
+            </a>
+        </div>
+
+        <div class="attendance-card">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Paciente</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas_hoy %}
+                    <tr>
+                        <td style="font-weight: bold;">
+                            <i class="far fa-clock" style="color: var(--primary-blue);"></i> 
+                            {{ cita.hora|time:"H:i" }}
+                        </td>
+                        <td>
+                            <div class="doctor-info">
+                                {{ cita.paciente.get_full_name|default:cita.paciente.username }}
+                            </div>
+                        </td>
+                        <td style="color: var(--text-gray);">
+                             {{ cita.motivo }}
+                        </td>
+                        <td>
+                            <span class="status-badge {% if cita.estado == 'Aceptada' %}asistida{% else %}pendiente{% endif %}">
+                                {{ cita.estado }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding: 40px;">
+                            <i class="far fa-calendar-times" style="font-size: 2rem; color: #cbd5e1; margin-bottom: 10px;"></i>
+                            <p style="color: #64748b;">No hay citas agendadas para hoy.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>
